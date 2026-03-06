@@ -120,7 +120,20 @@ export const ExtractionScreen = ({ onComplete }: ExtractionScreenProps) => {
   );
 };
 
-const HoneycombItem = ({ item, isSelected, isDimmed, onClick, index }: any) => {
+interface HoneycombItemProps {
+    item: {
+        id: string;
+        label: string;
+        icon: any; // Lucide icon component type
+        color: string;
+    };
+    isSelected: boolean;
+    isDimmed: boolean;
+    onClick: () => void;
+    index: number;
+}
+
+const HoneycombItem = ({ item, isSelected, isDimmed, onClick, index }: HoneycombItemProps) => {
     return (
         <motion.button
             layoutId={`honeycomb-${item.id}`} // Shared layout ID for transition

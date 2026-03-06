@@ -1,18 +1,55 @@
 
 'use client';
 
-import { useState } from 'react';
-import { MOCK_MESSAGES } from '@/lib/data';
-import { Send, Image, Smile, Mic, Paperclip, Phone, Video, MoreVertical, Sparkles, Plus, Search } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { MOCK_MESSAGES, Thread } from '@/lib/data';
+import { Send, Image, Smile, Mic, Paperclip, Phone, Video, MoreVertical, Sparkles, Plus, Search, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { messageSchema } from '@/lib/schemas';
+import { z } from 'zod';
 
-export const ChatView = () => {
+interface ChatViewProps {
+  thread?: Thread;
+  onBack?: () => void;
+}
+
+export const ChatView = ({ thread, onBack }: ChatViewProps) => {
   const [messages, setMessages] = useState(MOCK_MESSAGES);
   const [newMessage, setNewMessage] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  // Reset messages or load specific messages when thread changes
+  // For now, we'll just keep MOCK_MESSAGES but ideally this would fetch from API
+  useEffect(() => {
+    if (thread) {
+        // Here you would fetch messages for this thread
+        // setMessages(...)
+    }
+  }, [thread]);
+
+  if (!thread) {
+    return (
+        <div className="flex-1 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 text-slate-400">
+            <div className="w-16 h-16 bg-slate-200 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
+                <Sparkles className="w-8 h-8 text-slate-400" />
+            </div>
+            <p>Select a conversation to start chatting</p>
+        </div>
+    );
+  }
 
   const handleSendMessage = () => {
-    if (!newMessage.trim()) return;
+    // Zod Validation
+    const result = messageSchema.safeParse({ content: newMessage });
+    
+    if (!result.success) {
+        // In a real app, you'd show a toast or inline error
+        // For now, we'll just log or set a temporary error state if we had one
+        console.error(result.error);
+        return;
+    }
+
     setMessages([
         ...messages,
         {
@@ -25,21 +62,27 @@ export const ChatView = () => {
         }
     ]);
     setNewMessage('');
+    setError(null);
   };
 
   return (
     <div className="flex-1 flex flex-col bg-slate-50 dark:bg-slate-900 relative">
       {/* Header */}
-      <div className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-between px-6">
+      <div className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-3">
+            {onBack && (
+                <button onClick={onBack} className="p-2 -ml-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg md:hidden">
+                    <ArrowLeft className="w-5 h-5" />
+                </button>
+            )}
             <div className="relative">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 text-white flex items-center justify-center font-bold">
-                    OM
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 text-white flex items-center justify-center font-bold text-sm">
+                    {thread.user.avatar}
                 </div>
                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-slate-950 rounded-full"></div>
             </div>
             <div>
-                <h3 className="font-semibold text-slate-900 dark:text-white">Olivia Mckinsey</h3>
+                <h3 className="font-semibold text-slate-900 dark:text-white text-sm md:text-base">{thread.user.name}</h3>
                 <p className="text-xs text-slate-500">Active now</p>
             </div>
         </div>

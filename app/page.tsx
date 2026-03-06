@@ -10,28 +10,34 @@ import { RightPanel } from '@/components/dashboard/RightPanel';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Thread } from '@/lib/data';
 import { Menu } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
   const [isExtracted, setIsExtracted] = useState(false);
   const [dashboardData, setDashboardData] = useState<Thread[]>([]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [selectedThread, setSelectedThread] = useState<Thread | undefined>(undefined);
 
   const handleExtractionComplete = (data: Thread[]) => {
       setDashboardData(data);
+      if (data.length > 0) {
+          setSelectedThread(data[0]);
+      }
       setIsExtracted(true);
   };
 
   return (
     <main className="relative min-h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden text-slate-900 dark:text-white font-sans selection:bg-blue-100 dark:selection:bg-blue-900">
       
-      {/* Extraction / Loading Overlay */}
-      <AnimatePresence mode="wait">
+      {/* Extraction Screen Overlay */}
+      <AnimatePresence>
         {!isExtracted && (
           <motion.div
             key="extraction-screen"
-            exit={{ opacity: 0, pointerEvents: 'none' }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0 z-50"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
+            transition={{ duration: 0.8 }}
+            className="absolute inset-0 z-50 bg-slate-950"
           >
             <ExtractionScreen onComplete={handleExtractionComplete} />
           </motion.div>
@@ -62,14 +68,32 @@ export default function Home() {
             </div>
 
             <div className="flex-1 flex overflow-hidden">
-                <div className="w-full md:w-80 flex-shrink-0 border-r border-slate-200 dark:border-slate-800">
-                    <ChatList threads={dashboardData} />
+                {/* Chat List - Hidden on mobile if thread selected */}
+                <div className={cn(
+                    "w-full md:w-80 flex-shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 h-full",
+                     selectedThread ? "hidden md:block" : "block"
+                )}>
+                    <ChatList 
+                        threads={dashboardData} 
+                        selectedId={selectedThread?.id}
+                        onSelect={setSelectedThread}
+                    />
                 </div>
-                <div className="hidden md:flex flex-1 flex-col min-w-0">
-                    <ChatView />
+                
+                {/* Chat View - Hidden on mobile if no thread selected */}
+                <div className={cn(
+                    "flex-1 flex-col min-w-0 bg-white dark:bg-slate-950 h-full",
+                    selectedThread ? "flex" : "hidden md:flex"
+                )}>
+                    <ChatView 
+                        thread={selectedThread} 
+                        onBack={() => setSelectedThread(undefined)}
+                    />
                 </div>
+                
+                {/* Right Panel - Desktop only */}
                 <div className="hidden xl:flex w-72 flex-shrink-0 border-l border-slate-200 dark:border-slate-800">
-                    <RightPanel />
+                    <RightPanel thread={selectedThread} />
                 </div>
             </div>
          </motion.div>

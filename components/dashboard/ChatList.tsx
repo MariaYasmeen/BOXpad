@@ -9,10 +9,11 @@ import { motion } from 'framer-motion';
 
 interface ChatListProps {
   threads?: Thread[];
+  selectedId?: number;
+  onSelect?: (thread: Thread) => void;
 }
 
-export const ChatList = ({ threads = MOCK_THREADS }: ChatListProps) => {
-  const [activeThread, setActiveThread] = useState<number>(1);
+export const ChatList = ({ threads = MOCK_THREADS, selectedId, onSelect }: ChatListProps) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const displayThreads = threads.length > 0 ? threads : MOCK_THREADS;
@@ -23,7 +24,7 @@ export const ChatList = ({ threads = MOCK_THREADS }: ChatListProps) => {
   );
 
   return (
-    <div className="w-80 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex flex-col h-full">
+    <div className="w-full h-full flex flex-col bg-white dark:bg-slate-950">
       {/* Header */}
       <div className="p-4 border-b border-slate-100 dark:border-slate-900 flex items-center justify-between">
         <h2 className="font-semibold text-lg dark:text-slate-200">Inbox</h2>
@@ -69,27 +70,27 @@ export const ChatList = ({ threads = MOCK_THREADS }: ChatListProps) => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3 }}
-                onClick={() => setActiveThread(thread.id)}
+                onClick={() => onSelect?.(thread)}
                 className={cn(
                     "p-4 cursor-pointer border-b border-slate-50 dark:border-slate-900 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors relative group",
-                    activeThread === thread.id && "bg-blue-50 dark:bg-blue-900/10 border-l-4 border-l-blue-500"
+                    selectedId === thread.id && "bg-blue-50 dark:bg-blue-900/10 border-l-4 border-l-blue-500"
                 )}
             >
                 <div className="flex items-start gap-3">
                     <div className={cn(
                         "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0",
-                        activeThread === thread.id ? "bg-gradient-to-br from-blue-500 to-purple-500" : "bg-slate-300 dark:bg-slate-700"
+                        selectedId === thread.id ? "bg-gradient-to-br from-blue-500 to-purple-500" : "bg-slate-300 dark:bg-slate-700"
                     )}>
                         {thread.user.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-baseline mb-1">
-                            <h3 className={cn("font-medium text-sm truncate", activeThread === thread.id ? "text-blue-700 dark:text-blue-400" : "text-slate-900 dark:text-slate-200")}>
+                            <h3 className={cn("font-medium text-sm truncate", selectedId === thread.id ? "text-blue-700 dark:text-blue-400" : "text-slate-900 dark:text-slate-200")}>
                                 {thread.user.name}
                             </h3>
                             <span className="text-xs text-slate-400">{thread.timestamp}</span>
                         </div>
-                        <p className={cn("text-xs truncate mb-2", activeThread === thread.id ? "text-slate-600 dark:text-slate-300" : "text-slate-500")}>
+                        <p className={cn("text-xs truncate mb-2", selectedId === thread.id ? "text-slate-600 dark:text-slate-300" : "text-slate-500")}>
                             {thread.lastMessage}
                         </p>
                         

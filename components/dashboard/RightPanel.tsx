@@ -4,8 +4,26 @@
 import { User, Mail, Phone, Clock, PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { Thread } from '@/lib/data';
 
-export const RightPanel = () => {
+interface RightPanelProps {
+  thread?: Thread;
+}
+
+export const RightPanel = ({ thread }: RightPanelProps) => {
+  if (!thread) {
+    return (
+        <div className="w-72 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-8 flex flex-col items-center justify-center text-slate-400">
+            <User className="w-12 h-12 mb-4 opacity-20" />
+            <p className="text-sm text-center">Select a conversation to view details</p>
+        </div>
+    );
+  }
+
+  const names = thread.user.name.split(' ');
+  const firstName = names[0];
+  const lastName = names.slice(1).join(' ');
+
   return (
     <div className="w-72 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 flex flex-col h-full overflow-y-auto">
         {/* Details Header */}
@@ -42,24 +60,24 @@ export const RightPanel = () => {
             <div className="space-y-4">
                 <div className="space-y-1">
                     <span className="text-xs text-slate-400 block">First Name</span>
-                    <span className="text-sm font-medium dark:text-slate-200">Olivia</span>
+                    <span className="text-sm font-medium dark:text-slate-200">{firstName}</span>
                 </div>
                 <div className="space-y-1">
                     <span className="text-xs text-slate-400 block">Last Name</span>
-                    <span className="text-sm font-medium dark:text-slate-200">Mckinsey</span>
+                    <span className="text-sm font-medium dark:text-slate-200">{lastName}</span>
                 </div>
                  <div className="space-y-1">
                     <span className="text-xs text-slate-400 block">Phone number</span>
                     <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
                         <Phone className="w-3 h-3" />
-                        <span className="text-sm font-medium">+1 (312) 555-0134</span>
+                        <span className="text-sm font-medium">{thread.user.phone || '+1 (312) 555-0134'}</span>
                     </div>
                 </div>
                  <div className="space-y-1">
                     <span className="text-xs text-slate-400 block">Email</span>
                     <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
                         <Mail className="w-3 h-3" />
-                        <span className="text-sm font-medium truncate">olivia.mckinsey@gmail.com</span>
+                        <span className="text-sm font-medium truncate">{thread.user.email || `${firstName.toLowerCase()}.${lastName.toLowerCase()}@gmail.com`}</span>
                     </div>
                 </div>
             </div>
