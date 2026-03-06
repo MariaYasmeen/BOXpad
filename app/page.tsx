@@ -1,60 +1,78 @@
+
 'use client';
 
 import { useState } from 'react';
 import { ExtractionScreen } from '@/components/extraction/ExtractionScreen';
+import { Sidebar } from '@/components/dashboard/Sidebar';
+import { ChatList } from '@/components/dashboard/ChatList';
+import { ChatView } from '@/components/dashboard/ChatView';
+import { RightPanel } from '@/components/dashboard/RightPanel';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Thread } from '@/lib/data';
+import { Menu } from 'lucide-react';
 
 export default function Home() {
   const [isExtracted, setIsExtracted] = useState(false);
+  const [dashboardData, setDashboardData] = useState<Thread[]>([]);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  const handleExtractionComplete = (data: Thread[]) => {
+      setDashboardData(data);
+      setIsExtracted(true);
+  };
 
   return (
-    <main className="relative min-h-screen bg-slate-950 overflow-hidden text-white">
+    <main className="relative min-h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden text-slate-900 dark:text-white font-sans selection:bg-blue-100 dark:selection:bg-blue-900">
+      
+      {/* Extraction / Loading Overlay */}
       <AnimatePresence mode="wait">
         {!isExtracted && (
           <motion.div
             key="extraction-screen"
-            exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-            transition={{ duration: 0.8 }}
+            exit={{ opacity: 0, pointerEvents: 'none' }}
+            transition={{ duration: 0.5 }}
             className="absolute inset-0 z-50"
           >
-            <ExtractionScreen onComplete={() => setIsExtracted(true)} />
+            <ExtractionScreen onComplete={handleExtractionComplete} />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Dashboard Placeholder */}
-      <div className={`transition-all duration-1000 absolute inset-0 flex flex-col ${isExtracted ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none scale-95'}`}>
-         {/* Top Bar */}
-         <header className="h-16 border-b border-slate-800 flex items-center px-6 justify-between bg-slate-900/50 backdrop-blur-sm">
-            <div className="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">BOXpad</div>
-            <div className="flex items-center gap-4">
-                <div className="w-8 h-8 rounded-full bg-slate-700 animate-pulse" />
-                <div className="w-24 h-4 rounded bg-slate-700 animate-pulse" />
-            </div>
-         </header>
+      {/* Main Dashboard Layout */}
+      <div className="flex h-screen overflow-hidden bg-white dark:bg-slate-950">
+         {/* Sidebar with Shared Layout Animation */}
+         <Sidebar isExtracted={isExtracted} isOpen={isMobileOpen} onClose={() => setIsMobileOpen(false)} />
 
-         <div className="flex flex-1 overflow-hidden">
-            {/* Sidebar */}
-            <aside className="w-64 border-r border-slate-800 bg-slate-900/30 p-4 flex flex-col gap-4">
-                {/* Simulated Populated Sidebar Items */}
-                {[1, 2, 3, 4, 5].map((i) => (
-                    <div key={i} className="h-10 rounded bg-slate-800/50 animate-pulse" />
-                ))}
-            </aside>
-            
-            {/* Main Content */}
-            <section className="flex-1 p-8">
-                <div className="grid grid-cols-3 gap-6">
-                    <div className="col-span-2 space-y-4">
-                        <div className="h-32 rounded-xl bg-slate-800/30 animate-pulse" />
-                        <div className="h-64 rounded-xl bg-slate-800/30 animate-pulse" />
-                    </div>
-                    <div className="space-y-4">
-                         <div className="h-full rounded-xl bg-slate-800/30 animate-pulse" />
-                    </div>
+         {/* Dashboard Content - Fades in after extraction */}
+         <motion.div 
+            className="flex-1 flex flex-col overflow-hidden"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={isExtracted ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+         >
+            {/* Mobile Header */}
+            <div className="lg:hidden h-16 border-b border-slate-200 dark:border-slate-800 flex items-center px-4 justify-between bg-white dark:bg-slate-950 shrink-0">
+               <div className="flex items-center gap-2">
+                 <button onClick={() => setIsMobileOpen(true)} className="p-2 -ml-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+                    <Menu className="w-6 h-6" />
+                 </button>
+                 <div className="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">BOXpad</div>
+               </div>
+               <div className="w-8 h-8 bg-slate-200 dark:bg-slate-800 rounded-full" />
+            </div>
+
+            <div className="flex-1 flex overflow-hidden">
+                <div className="w-full md:w-80 flex-shrink-0 border-r border-slate-200 dark:border-slate-800">
+                    <ChatList threads={dashboardData} />
                 </div>
-            </section>
-         </div>
+                <div className="hidden md:flex flex-1 flex-col min-w-0">
+                    <ChatView />
+                </div>
+                <div className="hidden xl:flex w-72 flex-shrink-0 border-l border-slate-200 dark:border-slate-800">
+                    <RightPanel />
+                </div>
+            </div>
+         </motion.div>
       </div>
     </main>
   );

@@ -1,25 +1,62 @@
 
 'use client';
 
-import { motion } from 'framer-motion';
-import { Mail, Users, Bot, Workflow, Megaphone, Settings, Search, ChevronDown, User, MessageSquare } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, Users, Bot, Workflow, Megaphone, Settings, Search, ChevronDown, User, MessageSquare, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { honeycombs } from '@/components/extraction/ExtractionScreen';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
-export const Sidebar = ({ isExtracted }: { isExtracted: boolean }) => {
+interface SidebarProps {
+  isExtracted: boolean;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const Sidebar = ({ isExtracted, isOpen, onClose }: SidebarProps) => {
+  const isMobile = useMediaQuery('(max-width: 1024px)');
+
   return (
-    <motion.aside 
-        initial={{ width: 0, opacity: 0 }}
-        animate={isExtracted ? { width: 280, opacity: 1 } : { width: 0, opacity: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="h-full border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex flex-col overflow-hidden whitespace-nowrap"
-    >
-      <div className="p-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-900">
-        <div className="w-8 h-8 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">
-            B
+    <>
+      {/* Mobile Backdrop */}
+      <AnimatePresence>
+        {isMobile && isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      <motion.aside 
+        initial={isMobile ? { x: "-100%" } : { width: 0, opacity: 0 }}
+        animate={
+          isMobile 
+            ? { x: isOpen ? "0%" : "-100%" }
+            : { width: isExtracted ? 280 : 0, opacity: isExtracted ? 1 : 0 }
+        }
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className={cn(
+          "h-full border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex flex-col overflow-hidden whitespace-nowrap",
+          isMobile ? "fixed inset-y-0 left-0 z-50 w-[280px]" : "relative"
+        )}
+      >
+        <div className="p-4 flex items-center justify-between border-b border-slate-100 dark:border-slate-900">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">
+                B
+            </div>
+            <span className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">BOXpad</span>
+          </div>
+          {isMobile && (
+            <button onClick={onClose} className="p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
+              <X className="w-5 h-5 text-slate-500" />
+            </button>
+          )}
         </div>
-        <span className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">BOXpad</span>
-      </div>
 
       <div className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
          {/* Main Navigation */}
@@ -91,5 +128,6 @@ export const Sidebar = ({ isExtracted }: { isExtracted: boolean }) => {
         </button>
       </div>
     </motion.aside>
+    </>
   );
 };

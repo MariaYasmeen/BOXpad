@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Users, Bot, Workflow, Megaphone, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { fetchInboxData } from '@/lib/api';
 
 // Define the honeycombs
 export const honeycombs = [
@@ -15,22 +16,25 @@ export const honeycombs = [
 ];
 
 interface ExtractionScreenProps {
-  onComplete: () => void;
+  onComplete: (data: any[]) => void;
 }
 
 export const ExtractionScreen = ({ onComplete }: ExtractionScreenProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isExtracting, setIsExtracting] = useState(false);
 
-  const handleSelect = (id: string) => {
+  const handleSelect = async (id: string) => {
     if (isExtracting) return;
     setSelectedId(id);
     setIsExtracting(true);
 
-    // Simulate API call and extraction delay
-    setTimeout(() => {
-      onComplete();
-    }, 2500);
+    // Fetch data and wait for minimum animation time
+    const [data] = await Promise.all([
+        fetchInboxData(),
+        new Promise(resolve => setTimeout(resolve, 2500)) // Minimum 2.5s for animation
+    ]);
+
+    onComplete(data);
   };
 
   return (
@@ -125,7 +129,8 @@ const HoneycombItem = ({ item, isSelected, isDimmed, onClick, index }: any) => {
             animate={{ 
                 opacity: isDimmed ? 0.3 : 1, 
                 scale: isSelected ? 1.1 : 1,
-                filter: isDimmed ? "blur(2px)" : "blur(0px)"
+                filter: isDimmed ? "blur(2px)" : "blur(0px)",
+                zIndex: isSelected ? 50 : 1
             }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             whileHover={!isSelected && !isDimmed ? { scale: 1.1, zIndex: 10 } : {}}

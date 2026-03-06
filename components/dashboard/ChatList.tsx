@@ -1,17 +1,23 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Plus, Filter, ArrowDownUp } from 'lucide-react';
 import { MOCK_THREADS, Thread } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
-export const ChatList = () => {
+interface ChatListProps {
+  threads?: Thread[];
+}
+
+export const ChatList = ({ threads = MOCK_THREADS }: ChatListProps) => {
   const [activeThread, setActiveThread] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredThreads = MOCK_THREADS.filter(thread => 
+  const displayThreads = threads.length > 0 ? threads : MOCK_THREADS;
+
+  const filteredThreads = displayThreads.filter(thread => 
     thread.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     thread.lastMessage.toLowerCase().includes(searchTerm.toLowerCase())
   );
