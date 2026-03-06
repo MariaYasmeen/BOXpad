@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  
+  --animate-spin-slow: spin-slow 10s linear infinite;
+  --animate-spin-reverse-slower: spin-reverse-slower 15s linear infinite;
+
+  @keyframes spin-slow {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes spin-reverse-slower {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .hexagon-clip {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  }
+}
