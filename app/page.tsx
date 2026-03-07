@@ -104,11 +104,6 @@ export default function Home() {
                   borderRadius: '8.42px',
                   display: 'flex',
                   zIndex: 30,
-                  // Hide if not inbox tab, or maybe keep sidebar for all?
-                  // Figma usually implies sidebar is for Inbox. 
-                  // Let's hide it if not inbox to show "filtering/change" effect, 
-                  // or keep it if we assume other tabs use same layout.
-                  // For now, let's keep it visible but maybe the content changes.
                 }}
               >
                 <Sidebar 
@@ -191,9 +186,11 @@ export default function Home() {
                     </div>
                     
                     {/* Right Panel - Desktop only */}
-                    <div className="hidden xl:flex w-72 flex-shrink-0 border-l border-slate-200 dark:border-slate-800">
-                        <RightPanel thread={selectedThread} />
-                    </div>
+                    {!isMobile && (
+                        <div className="hidden xl:flex flex-shrink-0">
+                            <RightPanel thread={selectedThread} />
+                        </div>
+                    )}
                 </div>
              </motion.div>
          </div>
