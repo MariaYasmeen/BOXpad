@@ -85,29 +85,48 @@ export const Sidebar = ({ isExtracted, isOpen, onClose }: SidebarProps) => {
           )}
         </div>
 
-      <div className="flex-1 overflow-y-auto py-2 px-2 space-y-6">
+      <div className="flex-1 overflow-y-auto py-2 px-2 space-y-6 no-scrollbar">
          {/* Main Navigation */}
-         <div className="space-y-1">
+         <div 
+            className="space-y-1"
+            style={!isMobile ? {
+                width: '154.39px',
+                height: '85.61px',
+                gap: '8.42px',
+                display: 'flex',
+                flexDirection: 'column'
+            } : {}}
+         >
             {/* <div className="text-xs font-semibold text-slate-400 px-3 mb-2 uppercase tracking-wider">Dashboard</div> */}
             <motion.button
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+                className="flex items-center text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors font-semibold text-sm opacity-100 rotate-0 w-[151.58px] h-[26.67px] gap-[6px] rounded-[5.61px] pt-[4px] "
+                style={!isMobile ? { gap: '5.61px' } : { gap: '10.53' }}
             >
-                <User className="w-4 h-4" />
-                <span>My Inbox</span>
+                <div style={!isMobile ? { width: '10.53', height: '10.53' } : { width: '10.53', height: '10.53' }}>
+                    <User className="w-full h-full fill-black" />
+                </div>
+                <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>My Inbox</span>
             </motion.button>
             <motion.button
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+                className="flex items-center text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors font-semibold text-sm opacity-100 rotate-0 w-[151.58px] h-[26.67px] gap-[6px] rounded-[5.61px] pt-[4px] "
+                style={!isMobile ? { gap: '5.61px' } : { gap: '10.53' }}
             >
-                <Users className="w-4 h-4" />
-                <span>All</span>
-                <span className="ml-auto text-xs text-slate-400">28</span>
+                <div style={!isMobile ? { width: '10.53', height: '10.53' } : { width: '10.53', height: '10.53' }}>
+                    <Users className="w-full h-full fill-black" />
+                </div>
+                <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>All</span>
+                <span className="ml-auto text-xs text-black">28</span>
             </motion.button>
             <motion.button
-                className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+               className="flex items-center text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors font-semibold text-sm opacity-100 rotate-0 w-[151.58px] h-[26.67px] gap-[6px] rounded-[5.61px] pt-[4px]  "
+                style={!isMobile ? { gap: '5.61px' } : { gap: '10.53' }}
             >
-                <div className="w-4 h-4 border-2 border-slate-400 rounded-full border-dashed" />
-                <span>Unassigned</span>
-                <span className="ml-auto text-xs text-slate-400">5</span>
+                <div 
+                    className="border-2 border-black rounded-full border-dashed flex items-center justify-center"
+                    style={!isMobile ? { width: '10.53', height: '10.53' } : { width: '10.53', height: '10.53' }}
+                 />
+                <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>Unassigned</span>
+                <span className="ml-auto text-xs text-black">5</span>
             </motion.button>
          </div>
 
@@ -118,12 +137,12 @@ export const Sidebar = ({ isExtracted, isOpen, onClose }: SidebarProps) => {
                 <ChevronDown className="w-3 h-3" />
             </div>
             {[{name: 'Sales', count: 7}, {name: 'Customer Support', count: 16}].map((team) => (
-                <button key={team.name} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900">
+                <button key={team.name} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900">
                     <div className="w-4 h-4 flex items-center justify-center">
-                        <div className="w-3 h-3 rounded-full border border-slate-300" />
+                        <div className="w-3 h-3 rounded-full border border-black bg-black" />
                     </div>
-                    <span>{team.name}</span>
-                    <span className="ml-auto text-xs text-slate-400">{team.count}</span>
+                    <span className="truncate">{team.name}</span>
+                    <span className="ml-auto text-xs text-black">{team.count}</span>
                 </button>
             ))}
          </div>
@@ -145,20 +164,20 @@ export const Sidebar = ({ isExtracted, isOpen, onClose }: SidebarProps) => {
                 <button 
                     key={user.name} 
                     className={cn(
-                        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-colors",
                         user.active 
-                            ? "bg-white shadow-sm border border-slate-100" 
-                            : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+                            ? "bg-white shadow-sm border border-slate-100 text-black" 
+                            : "text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
                     )}
                 >
                     <div className="w-4 h-4 flex items-center justify-center">
-                         <div className="w-4 h-4 bg-slate-200 rounded-full flex items-center justify-center text-[8px] text-slate-500 font-bold">
-                            <User className="w-3 h-3 text-slate-400" />
+                         <div className="w-4 h-4 bg-slate-200 rounded-full flex items-center justify-center text-[8px] text-black font-bold">
+                            <User className="w-3 h-3 text-black fill-black" />
                          </div>
                     </div>
                     <span className="truncate">{user.name}</span>
                     {user.count > 0 && (
-                        <span className="ml-auto text-xs text-slate-400">{user.count}</span>
+                        <span className="ml-auto text-xs text-black">{user.count}</span>
                     )}
                 </button>
             ))}

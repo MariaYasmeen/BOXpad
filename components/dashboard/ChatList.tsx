@@ -81,7 +81,7 @@ export const ChatList = ({ threads = MOCK_THREADS, selectedId, onSelect }: ChatL
 
       {/* List */}
       <div 
-        className="flex-1 overflow-y-auto custom-scrollbar"
+        className="flex-1 overflow-y-auto no-scrollbar"
         style={!isMobile ? {
             width: '249.12px',
             height: '488.42px', // Explicit height from spec
