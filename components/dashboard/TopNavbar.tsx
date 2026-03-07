@@ -2,17 +2,15 @@
 
 import { Mail, Users, Bot, Workflow, Megaphone, Settings, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { MENU_ITEMS } from '@/lib/data';
+import { NavButton } from './NavButton';
 
-const navItems = [
-  { id: 'inbox', label: 'Inbox', icon: Mail },
-  { id: 'contacts', label: 'Contacts', icon: Users },
-  { id: 'employees', label: 'AI Employees', icon: Bot },
-  { id: 'workflows', label: 'Workflows', icon: Workflow },
-  { id: 'campaigns', label: 'Campaigns', icon: Megaphone },
-];
+interface TopNavbarProps {
+    activeTab?: string;
+    onTabChange?: (tabId: string) => void;
+}
 
-export const TopNavbar = () => {
-  const activeTab = 'inbox';
+export const TopNavbar = ({ activeTab = 'inbox', onTabChange }: TopNavbarProps) => {
 
   return (
     <div 
@@ -70,43 +68,16 @@ export const TopNavbar = () => {
 
           {/* Navigation */}
           <div className="hidden md:flex items-center gap-2 overflow-x-auto no-scrollbar mask-gradient pr-4">
-             {navItems.map((item) => {
-                const isActive = item.id === activeTab;
-                return (
-                   <button
-                     key={item.id}
-                     className={cn(
-                        "flex items-center justify-center transition-all",
-                        isActive 
-                          ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold border border-slate-200 dark:border-slate-700" 
-                          : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-900 font-medium"
-                     )}
-                     style={{
-                        // Exact specs from Figma
-                        height: '23.86px',
-                        paddingLeft: '7.02px',
-                        paddingRight: '7.02px',
-                        gap: '5.61px',
-                        borderRadius: '5.61px',
-                        fontSize: '9.82px',
-                        lineHeight: '100%',
-                        letterSpacing:'0%',
-                        fontFamily: '"SF Compact", sans-serif',
-                        fontWeight: isActive ? 600 : 556,
-                        borderWidth: isActive ? '0.7px' : '0px',
-                        width: item.id === 'inbox' ? '59.68px' : 'auto',
-                     }}
-                   >
-                      <item.icon 
-                        className={cn(
-                            isActive ? "stroke-[2.5px]" : "stroke-2"
-                        )} 
-                        style={{ width: '12px', height: '12px' }}
-                      />
-                      <span>{item.label}</span>
-                   </button>
-                );
-             })}
+             {MENU_ITEMS.map((item) => (
+                <NavButton
+                    key={item.id}
+                    label={item.label}
+                    icon={item.icon}
+                    isActive={item.id === activeTab}
+                    onClick={() => onTabChange?.(item.id)}
+                    variant="navbar"
+                />
+             ))}
           </div>
 
           {/* Mobile Menu Icon */}

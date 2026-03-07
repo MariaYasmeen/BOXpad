@@ -7,7 +7,8 @@ import { cn } from '@/lib/utils';
 import { honeycombs } from '@/components/extraction/ExtractionScreen';
 import { useMediaQuery } from '@/hooks/use-media-query';
 
-import { Thread } from '@/lib/data';
+import { Thread, MENU_ITEMS } from '@/lib/data';
+import { NavButton } from './NavButton';
 
 interface SidebarProps {
   isExtracted: boolean;
@@ -15,9 +16,11 @@ interface SidebarProps {
   onClose: () => void;
   threads?: Thread[];
   unreadCount?: number;
+  activeTab?: string;
+  onTabChange?: (tabId: string) => void;
 }
 
-export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCount = 0 }: SidebarProps) => {
+export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCount = 0, activeTab = 'inbox', onTabChange }: SidebarProps) => {
   const isMobile = useMediaQuery('(max-width: 1024px)');
 
 
@@ -68,7 +71,9 @@ export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCoun
             } : { padding: '1rem' }}
         >
           <div className="flex items-center gap-2">
-            <span className="font-bold text-xl dark:text-white">Inbox</span>
+            <span className="font-bold text-xl dark:text-white">
+                {MENU_ITEMS.find(i => i.id === activeTab)?.label || 'Inbox'}
+            </span>
           </div>
           {isMobile && (
             <button onClick={onClose} className="p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
@@ -78,6 +83,25 @@ export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCoun
         </div>
 
       <div className="flex-1 overflow-y-auto py-2 space-y-2 no-scrollbar">
+         
+         {/* Mobile Navigation */}
+         {isMobile && (
+             <div className="space-y-1 mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+                 {MENU_ITEMS.map((item) => (
+                     <NavButton
+                         key={item.id}
+                         label={item.label}
+                         icon={item.icon}
+                         isActive={item.id === activeTab}
+                         onClick={() => {
+                             onTabChange?.(item.id);
+                             onClose();
+                         }}
+                         variant="sidebar"
+                     />
+                 ))}
+             </div>
+         )}
          {/* Main Navigation */}
          <div 
             className="space-y-1"

@@ -19,6 +19,7 @@ export default function Home() {
   const [isExtracted, setIsExtracted] = useState(false);
   const [dashboardData, setDashboardData] = useState<Thread[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [activeTab, setActiveTab] = useState('inbox');
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [selectedThread, setSelectedThread] = useState<Thread | undefined>(undefined);
   const isMobile = useMediaQuery('(max-width: 1024px)');
@@ -47,6 +48,18 @@ export default function Home() {
       setIsExtracted(true);
   };
 
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    // Trigger re-fetch or filter logic
+    if (tabId === 'inbox') {
+        // In a real app, you might re-fetch inbox data here
+        // For now, we ensure dashboardData is available
+    } else {
+        // For other tabs, we might clear data or fetch different data
+        // setDashboardData([]); // Optional: clear data to show change
+    }
+  };
+
   return (
     <main className="relative min-h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden text-slate-900 dark:text-white font-sans selection:bg-blue-100 dark:selection:bg-blue-900">
       
@@ -69,7 +82,7 @@ export default function Home() {
       <div className="flex flex-col h-screen overflow-hidden bg-slate-50 dark:bg-slate-950">
          {/* Top Navbar */}
          <div className="z-40 relative">
-            <TopNavbar />
+            <TopNavbar activeTab={activeTab} onTabChange={handleTabChange} />
          </div>
 
          <div className="flex flex-1 overflow-hidden relative">
@@ -88,6 +101,11 @@ export default function Home() {
                   borderRadius: '8.42px',
                   display: 'flex',
                   zIndex: 30,
+                  // Hide if not inbox tab, or maybe keep sidebar for all?
+                  // Figma usually implies sidebar is for Inbox. 
+                  // Let's hide it if not inbox to show "filtering/change" effect, 
+                  // or keep it if we assume other tabs use same layout.
+                  // For now, let's keep it visible but maybe the content changes.
                 }}
               >
                 <Sidebar 
@@ -96,6 +114,8 @@ export default function Home() {
                   onClose={() => {}} 
                   threads={dashboardData}
                   unreadCount={unreadCount}
+                  activeTab={activeTab}
+                  onTabChange={handleTabChange}
                 />
                 {isExtracted && (
                   <div className="h-full flex-1">
@@ -117,6 +137,8 @@ export default function Home() {
                 onClose={() => setIsMobileOpen(false)} 
                 threads={dashboardData}
                 unreadCount={unreadCount}
+                activeTab={activeTab}
+                onTabChange={handleTabChange}
               />
             )}
 
