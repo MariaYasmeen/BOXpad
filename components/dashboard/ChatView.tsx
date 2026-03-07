@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MOCK_MESSAGES, Thread, Message } from '@/lib/data';
+import { Thread, Message } from '@/lib/data';
 import { fetchThreadMessages } from '@/lib/api';
 import { Send, Image, Smile, Mic, Video, MoreVertical, Sparkles, Plus, Search, ArrowLeft, CornerUpLeft, FileText, CheckCheck, Clock, Save, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -126,10 +126,10 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-6 py-4 space-y-[9.82px] no-scrollbar min-h-0">
-        {/* Date Pill */}
+        {/* Date Pill - Dynamic */}
         <div className="flex justify-center mb-6">
             <div className="bg-slate-100 dark:bg-slate-800 px-4 py-1.5 rounded-[4px] text-[10px] font-semibold text-slate-500">
-                28 August 2025
+                {messages.length > 0 ? 'Today' : 'No messages'}
             </div>
         </div>
 

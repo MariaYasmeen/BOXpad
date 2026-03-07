@@ -52,11 +52,14 @@ export default function Home() {
     setActiveTab(tabId);
     // Trigger re-fetch or filter logic
     if (tabId === 'inbox') {
-        // In a real app, you might re-fetch inbox data here
-        // For now, we ensure dashboardData is available
+        fetchInboxData().then(data => {
+            setDashboardData(data);
+            if (data.length > 0) setSelectedThread(data[0]);
+        }).catch(console.error);
     } else {
-        // For other tabs, we might clear data or fetch different data
-        // setDashboardData([]); // Optional: clear data to show change
+        // For other tabs, we clear data as we don't have endpoints yet
+        setDashboardData([]);
+        setSelectedThread(undefined);
     }
   };
 

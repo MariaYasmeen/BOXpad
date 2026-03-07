@@ -131,7 +131,7 @@ export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCoun
                     <Users className="w-full h-full fill-black" />
                 </div>
                 <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>All</span>
-                <span className="ml-auto text-xs text-black">{unreadCount}</span>
+                {unreadCount > 0 && <span className="ml-auto text-xs text-black">{unreadCount}</span>}
             </motion.button>
             <motion.button
                 className="w-full flex items-center px-3 py-1.5 rounded-lg text-xs font-normal transition-colors text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
@@ -142,26 +142,10 @@ export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCoun
                     style={!isMobile ? { width: '14px', height: '14px' } : { width: '16px', height: '16px' }}
                  />
                 <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>Unassigned</span>
-                <span className="ml-auto text-xs text-black">5</span>
+                {/* <span className="ml-auto text-xs text-black">5</span> */}
             </motion.button>
          </div>
 
-         {/* Teams Section */}
-         <div className="space-y-1">
-            <div className="flex items-center justify-between px-3 mb-2 text-slate-400 cursor-pointer hover:text-slate-600 dark:hover:text-slate-300">
-                <div className="text-sm font-medium">Teams</div>
-                <ChevronDown className="w-3 h-3" />
-            </div>
-            {[{name: 'Sales', count: 7}, {name: 'Customer Support', count: 16}].map((team) => (
-                <button key={team.name} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-normal text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900">
-                    <div className="w-4 h-4 flex items-center justify-center">
-                        <div className="w-3 h-3 rounded-full border border-black bg-black" />
-                    </div>
-                    <span className="truncate">{team.name}</span>
-                    <span className="ml-auto text-xs text-black">{team.count}</span>
-                </button>
-            ))}
-         </div>
          
          {/* Users Section */}
          <div 

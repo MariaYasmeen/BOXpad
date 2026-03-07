@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Search, Plus, Filter, ArrowDownUp } from 'lucide-react';
-import { MOCK_THREADS, Thread } from '@/lib/data';
+import { Thread, CURRENT_USER } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { useMediaQuery } from '@/hooks/use-media-query';
@@ -14,11 +14,11 @@ interface ChatListProps {
   onSelect?: (thread: Thread) => void;
 }
 
-export const ChatList = ({ threads = MOCK_THREADS, selectedId, onSelect }: ChatListProps) => {
+export const ChatList = ({ threads = [], selectedId, onSelect }: ChatListProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const isMobile = useMediaQuery('(max-width: 1024px)');
 
-  const displayThreads = threads.length > 0 ? threads : MOCK_THREADS;
+  const displayThreads = threads;
 
   const filteredThreads = displayThreads.filter(thread => 
     thread.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -42,7 +42,7 @@ export const ChatList = ({ threads = MOCK_THREADS, selectedId, onSelect }: ChatL
             <div className="w-5 h-5 border border-slate-800 rounded flex items-center justify-center">
                  <div className="w-3 h-3 bg-slate-800 dark:bg-white" /> 
             </div>
-            <h2 className="font-bold text-sm dark:text-slate-200">Michael Johnson</h2>
+            <h2 className="font-bold text-sm dark:text-slate-200">{CURRENT_USER.name}</h2>
         </div>
         <button className="text-slate-500 hover:text-slate-700">
              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

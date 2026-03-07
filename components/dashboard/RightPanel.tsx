@@ -39,15 +39,21 @@ export const RightPanel = ({ thread }: RightPanelProps) => {
             <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-500 dark:text-slate-400">Assignee</span>
                 <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">JW</div>
-                    <span className="font-medium dark:text-slate-200">James West</span>
+                    <div className="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">
+                        {firstName.charAt(0)}{lastName.charAt(0)}
+                    </div>
+                    <span className="font-medium dark:text-slate-200">{firstName} {lastName}</span>
                 </div>
             </div>
              <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500 dark:text-slate-400">Team</span>
+                <span className="text-slate-500 dark:text-slate-400">Role</span>
                 <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]">S</div>
-                    <span className="font-medium dark:text-slate-200">Sales Team</span>
+                    <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[10px]">
+                        {thread.user.role?.charAt(0) || 'U'}
+                    </div>
+                    <span className="font-medium dark:text-slate-200 truncate max-w-[120px]">
+                        {thread.user.role || 'User'}
+                    </span>
                 </div>
             </div>
         </div>
@@ -70,14 +76,14 @@ export const RightPanel = ({ thread }: RightPanelProps) => {
                     <span className="text-xs text-slate-400 block">Phone number</span>
                     <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
                         <Phone className="w-3 h-3" />
-                        <span className="text-sm font-medium">{thread.user.phone || '+1 (312) 555-0134'}</span>
+                        <span className="text-sm font-medium">{thread.user.phone || 'N/A'}</span>
                     </div>
                 </div>
                  <div className="space-y-1">
                     <span className="text-xs text-slate-400 block">Email</span>
                     <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
                         <Mail className="w-3 h-3" />
-                        <span className="text-sm font-medium truncate">{thread.user.email || `${firstName.toLowerCase()}.${lastName.toLowerCase()}@gmail.com`}</span>
+                        <span className="text-sm font-medium truncate">{thread.user.email}</span>
                     </div>
                 </div>
             </div>
@@ -90,13 +96,18 @@ export const RightPanel = ({ thread }: RightPanelProps) => {
          <div className="mb-6">
             <h4 className="font-semibold text-sm mb-4 dark:text-slate-200">Contact Labels</h4>
             <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-600 text-xs font-medium flex items-center gap-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                    Closed Won
-                </span>
-                 <span className="px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-600 text-xs font-medium flex items-center gap-1">
-                    Chicago
-                </span>
+                {thread.tags && thread.tags.length > 0 ? (
+                    thread.tags.map((tag, i) => (
+                         <span key={i} className="px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-600 text-xs font-medium flex items-center gap-1">
+                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                            {tag}
+                        </span>
+                    ))
+                ) : (
+                     <span className="px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-600 text-xs font-medium flex items-center gap-1">
+                        New Lead
+                    </span>
+                )}
                 <button className="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-slate-400 hover:border-blue-500 hover:text-blue-500 transition-colors">
                     <PlusCircle className="w-4 h-4" />
                 </button>
@@ -114,9 +125,11 @@ export const RightPanel = ({ thread }: RightPanelProps) => {
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-900/50 p-3 rounded-lg mb-2">
                 <p className="text-xs text-yellow-800 dark:text-yellow-200 font-medium">Add a note</p>
             </div>
-             <div className="bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-200 dark:border-yellow-900/60 p-3 rounded-lg">
-                <p className="text-xs text-yellow-900 dark:text-yellow-100">Strong potential for future upgrades</p>
-            </div>
+            {thread.notes && (
+                 <div className="bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-200 dark:border-yellow-900/60 p-3 rounded-lg">
+                    <p className="text-xs text-yellow-900 dark:text-yellow-100">{thread.notes}</p>
+                </div>
+            )}
         </div>
     </div>
   );

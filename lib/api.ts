@@ -1,5 +1,5 @@
 
-import { Thread, MOCK_THREADS, Message, User } from './data';
+import { Thread, Message, User } from './data';
 
 const CURRENT_USER_EMAIL = "Michael.Johnson@example.com";
 
@@ -39,7 +39,8 @@ export async function fetchInboxData(): Promise<Thread[]> {
         timestamp: new Date(Date.now() - index * 3600000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), // Stagger timestamps
         unreadCount: index < 3 ? 1 : 0, // Mark first few as unread
         isAI: index === 2 || index === 5, // Randomly assign AI status
-        tags: [randomUser?.location?.city || 'Remote', 'API Data']
+        tags: [randomUser?.location?.city || 'Remote'],
+        notes: user.company.catchPhrase // Use company catchphrase as note
       };
     });
 
@@ -47,7 +48,7 @@ export async function fetchInboxData(): Promise<Thread[]> {
     
   } catch (error) {
     console.error("Failed to fetch data", error);
-    return MOCK_THREADS; // Fallback
+    return []; // Return empty array on error instead of mock data
   }
 }
 
@@ -88,6 +89,6 @@ export async function fetchUnreadCount(): Promise<number> {
     return todos.filter((todo: any) => !todo.completed).length;
   } catch (error) {
     console.error("Failed to fetch todos", error);
-    return 5; // Fallback
+    return 0; // Fallback
   }
 }

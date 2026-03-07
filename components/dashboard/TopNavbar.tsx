@@ -2,7 +2,7 @@
 
 import { Mail, Users, Bot, Workflow, Megaphone, Settings, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { MENU_ITEMS } from '@/lib/data';
+import { MENU_ITEMS, CURRENT_USER } from '@/lib/data';
 import { NavButton } from './NavButton';
 
 interface TopNavbarProps {
@@ -109,7 +109,7 @@ export const TopNavbar = ({ activeTab = 'inbox', onTabChange }: TopNavbarProps) 
             }}
           >
              <div className="w-5 h-5 bg-[#FF3B30] rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-                M
+                {CURRENT_USER.name.charAt(0)}
              </div>
              <span 
                 className="text-slate-900 dark:text-white truncate"
@@ -119,7 +119,7 @@ export const TopNavbar = ({ activeTab = 'inbox', onTabChange }: TopNavbarProps) 
                     fontFamily: '"SF Compact", sans-serif'
                 }}
              >
-                Michael Johnson
+                {CURRENT_USER.name}
              </span>
           </div>
        </div>
