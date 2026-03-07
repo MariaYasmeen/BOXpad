@@ -6,6 +6,7 @@ import { Search, Plus, Filter, ArrowDownUp } from 'lucide-react';
 import { MOCK_THREADS, Thread } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 interface ChatListProps {
   threads?: Thread[];
@@ -15,6 +16,7 @@ interface ChatListProps {
 
 export const ChatList = ({ threads = MOCK_THREADS, selectedId, onSelect }: ChatListProps) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const isMobile = useMediaQuery('(max-width: 1024px)');
 
   const displayThreads = threads.length > 0 ? threads : MOCK_THREADS;
 
@@ -24,18 +26,30 @@ export const ChatList = ({ threads = MOCK_THREADS, selectedId, onSelect }: ChatL
   );
 
   return (
-    <div className="w-full h-full flex flex-col bg-white dark:bg-slate-950">
+    <div 
+        className="w-full h-full flex flex-col bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800"
+        style={!isMobile ? {
+            width: '249.12px',
+            height: '609.82px',
+            borderTopRightRadius: '8.42px',
+            borderBottomRightRadius: '8.42px',
+            borderLeftWidth: '0.7px'
+        } : {}}
+    >
       {/* Header */}
       <div className="p-4 border-b border-slate-100 dark:border-slate-900 flex items-center justify-between">
-        <h2 className="font-semibold text-lg dark:text-slate-200">Inbox</h2>
-        <div className="flex gap-2">
-            <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500">
-                <Filter className="w-4 h-4" />
-            </button>
-            <button className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                <Plus className="w-4 h-4" />
-            </button>
+        <div className="flex items-center gap-3">
+            <div className="w-5 h-5 border border-slate-800 rounded flex items-center justify-center">
+                 <div className="w-3 h-3 bg-slate-800 dark:bg-white" /> 
+            </div>
+            <h2 className="font-bold text-sm dark:text-slate-200">Michael Johnson</h2>
         </div>
+        <button className="text-slate-500 hover:text-slate-700">
+             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+             </svg>
+        </button>
       </div>
 
       {/* Search */}
@@ -47,23 +61,39 @@ export const ChatList = ({ threads = MOCK_THREADS, selectedId, onSelect }: ChatL
                 placeholder="Search Chat" 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border-none rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:text-slate-200"
+                className="w-full pl-9 pr-4 py-2 bg-transparent border-none text-sm focus:outline-none dark:text-slate-200"
             />
+            <div className="absolute right-3 top-2.5">
+                 <Filter className="w-4 h-4 text-slate-400" />
+            </div>
         </div>
-        <div className="flex items-center justify-between mt-3 text-xs text-slate-500 px-1">
+        <div className="flex items-center justify-between mt-3 text-xs text-slate-500 px-1 font-medium">
             <div className="flex items-center gap-1 cursor-pointer hover:text-slate-700 dark:hover:text-slate-300">
-                <span>Open</span>
+                <span className="text-slate-900 dark:text-white font-bold">Open</span>
                 <ArrowDownUp className="w-3 h-3" />
             </div>
             <div className="flex items-center gap-1 cursor-pointer hover:text-slate-700 dark:hover:text-slate-300">
-                <span>Newest</span>
+                <span className="text-slate-900 dark:text-white font-bold">Newest</span>
                 <ArrowDownUp className="w-3 h-3" />
             </div>
         </div>
       </div>
 
       {/* List */}
-      <div className="flex-1 overflow-y-auto">
+      <div 
+        className="flex-1 overflow-y-auto custom-scrollbar"
+        style={!isMobile ? {
+            width: '249.12px',
+            height: '488.42px', // Explicit height from spec
+            gap: '2.81px',
+            paddingTop: '5.61px',
+            paddingRight: '8.42px',
+            paddingBottom: '5.61px',
+            paddingLeft: '8.42px',
+            display: 'flex',
+            flexDirection: 'column'
+        } : {}}
+      >
         {filteredThreads.map((thread) => (
             <motion.div
                 key={thread.id}
@@ -72,40 +102,29 @@ export const ChatList = ({ threads = MOCK_THREADS, selectedId, onSelect }: ChatL
                 transition={{ duration: 0.3 }}
                 onClick={() => onSelect?.(thread)}
                 className={cn(
-                    "p-4 cursor-pointer border-b border-slate-50 dark:border-slate-900 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors relative group",
-                    selectedId === thread.id && "bg-blue-50 dark:bg-blue-900/10 border-l-4 border-l-blue-500"
+                    "p-3 cursor-pointer rounded-xl border border-transparent transition-all relative group hover:shadow-sm",
+                    selectedId === thread.id 
+                        ? "bg-white shadow-sm border-slate-100" 
+                        : "bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-50 dark:border-slate-800"
                 )}
             >
                 <div className="flex items-start gap-3">
                     <div className={cn(
-                        "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0",
-                        selectedId === thread.id ? "bg-gradient-to-br from-blue-500 to-purple-500" : "bg-slate-300 dark:bg-slate-700"
+                        "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0",
+                        selectedId === thread.id ? "bg-purple-100 text-purple-600" : "bg-orange-100 text-orange-600"
                     )}>
-                        {thread.user.avatar}
+                        {thread.user.name.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-baseline mb-1">
-                            <h3 className={cn("font-medium text-sm truncate", selectedId === thread.id ? "text-blue-700 dark:text-blue-400" : "text-slate-900 dark:text-slate-200")}>
+                        <div className="flex justify-between items-baseline mb-0.5">
+                            <h3 className="font-bold text-xs text-slate-900 dark:text-slate-200 truncate">
                                 {thread.user.name}
                             </h3>
-                            <span className="text-xs text-slate-400">{thread.timestamp}</span>
+                            <span className="text-[10px] text-slate-400 font-medium">{thread.timestamp}</span>
                         </div>
-                        <p className={cn("text-xs truncate mb-2", selectedId === thread.id ? "text-slate-600 dark:text-slate-300" : "text-slate-500")}>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate leading-tight">
                             {thread.lastMessage}
                         </p>
-                        
-                        <div className="flex items-center gap-2">
-                            {thread.tags?.map(tag => (
-                                <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700">
-                                    {tag}
-                                </span>
-                            ))}
-                            {thread.unreadCount > 0 && (
-                                <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">
-                                    {thread.unreadCount}
-                                </span>
-                            )}
-                        </div>
                     </div>
                 </div>
             </motion.div>

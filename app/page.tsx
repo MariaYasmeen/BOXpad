@@ -12,12 +12,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Thread } from '@/lib/data';
 import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 export default function Home() {
   const [isExtracted, setIsExtracted] = useState(false);
   const [dashboardData, setDashboardData] = useState<Thread[]>([]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [selectedThread, setSelectedThread] = useState<Thread | undefined>(undefined);
+  const isMobile = useMediaQuery('(max-width: 1024px)');
 
   const handleExtractionComplete = (data: Thread[]) => {
       setDashboardData(data);
@@ -53,15 +55,48 @@ export default function Home() {
          </div>
 
          <div className="flex flex-1 overflow-hidden relative">
-            {/* Sidebar with Shared Layout Animation */}
-            <Sidebar isExtracted={isExtracted} isOpen={isMobileOpen} onClose={() => setIsMobileOpen(false)} />
+            {/* Desktop Unified Inbox Panel (Sidebar + ChatList) */}
+            {!isMobile && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={isExtracted ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                style={{
+                  position: 'absolute',
+                  top: '10.53px',
+                  left: '7.72px',
+                  width: '417.54px',
+                  height: '609.82px',
+                  borderRadius: '8.42px',
+                  display: 'flex',
+                  zIndex: 30,
+                }}
+              >
+                <Sidebar isExtracted={isExtracted} isOpen={false} onClose={() => {}} />
+                {isExtracted && (
+                  <div className="h-full flex-1">
+                    <ChatList 
+                      threads={dashboardData} 
+                      selectedId={selectedThread?.id}
+                      onSelect={setSelectedThread}
+                    />
+                  </div>
+                )}
+              </motion.div>
+            )}
 
-            {/* Dashboard Content - Fades in after extraction */}
+            {/* Mobile Sidebar (Drawer) */}
+            {isMobile && (
+              <Sidebar isExtracted={isExtracted} isOpen={isMobileOpen} onClose={() => setIsMobileOpen(false)} />
+            )}
+
+            {/* Dashboard Content */}
             <motion.div 
                 className="flex-1 flex flex-col overflow-hidden"
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={isExtracted ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+                style={!isMobile ? { marginLeft: '435px' } : {}}
             >
                 {/* Mobile Header (Hidden on Desktop) */}
                 <div className="lg:hidden h-16 border-b border-slate-200 dark:border-slate-800 flex items-center px-4 justify-between bg-white dark:bg-slate-950 shrink-0">
@@ -75,19 +110,21 @@ export default function Home() {
                 </div>
 
                 <div className="flex-1 flex overflow-hidden">
-                    {/* Chat List - Hidden on mobile if thread selected */}
-                    <div className={cn(
-                        "w-full md:w-80 flex-shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 h-full",
-                         selectedThread ? "hidden md:block" : "block"
-                    )}>
-                        <ChatList 
-                            threads={dashboardData} 
-                            selectedId={selectedThread?.id}
-                            onSelect={setSelectedThread}
-                        />
-                    </div>
+                    {/* Chat List - Mobile Only */}
+                    {isMobile && (
+                      <div className={cn(
+                          "w-full md:w-80 flex-shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 h-full",
+                           selectedThread ? "hidden md:block" : "block"
+                      )}>
+                          <ChatList 
+                              threads={dashboardData} 
+                              selectedId={selectedThread?.id}
+                              onSelect={setSelectedThread}
+                          />
+                      </div>
+                    )}
                     
-                    {/* Chat View - Hidden on mobile if no thread selected */}
+                    {/* Chat View */}
                     <div className={cn(
                         "flex-1 flex-col min-w-0 bg-white dark:bg-slate-950 h-full",
                         selectedThread ? "flex" : "hidden md:flex"
