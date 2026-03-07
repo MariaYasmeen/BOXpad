@@ -7,27 +7,19 @@ import { cn } from '@/lib/utils';
 import { honeycombs } from '@/components/extraction/ExtractionScreen';
 import { useMediaQuery } from '@/hooks/use-media-query';
 
+import { Thread } from '@/lib/data';
+
 interface SidebarProps {
   isExtracted: boolean;
   isOpen: boolean;
   onClose: () => void;
+  threads?: Thread[];
+  unreadCount?: number;
 }
 
-export const Sidebar = ({ isExtracted, isOpen, onClose }: SidebarProps) => {
+export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCount = 0 }: SidebarProps) => {
   const isMobile = useMediaQuery('(max-width: 1024px)');
 
-  // Mock Users Data
-  const users = [
-    { name: 'Sarah Williams', count: 2 },
-    { name: 'Michael Johnson', count: 11, active: true },
-    { name: 'Emily Davis', count: 0 },
-    { name: 'Christopher Miller', count: 4 },
-    { name: 'Amanda Garcia', count: 5 },
-    { name: 'Joshua Martinez', count: 0 },
-    { name: 'Ashley Taylor', count: 1 },
-    { name: 'Daniel Anderson', count: 0 },
-    { name: 'Jessica Thomas', count: 2 },
-  ];
 
   return (
     <>
@@ -115,7 +107,7 @@ export const Sidebar = ({ isExtracted, isOpen, onClose }: SidebarProps) => {
                     <Users className="w-full h-full fill-black" />
                 </div>
                 <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>All</span>
-                <span className="ml-auto text-xs text-black">28</span>
+                <span className="ml-auto text-xs text-black">{unreadCount}</span>
             </motion.button>
             <motion.button
                 className="w-full flex items-center px-3 py-1.5 rounded-lg text-xs font-normal transition-colors text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
@@ -160,24 +152,26 @@ export const Sidebar = ({ isExtracted, isOpen, onClose }: SidebarProps) => {
                 <div className="text-sm font-medium">Users</div>
                 <ChevronDown className="w-3 h-3" />
             </div>
-            {users.map((user) => (
+            {threads.map((thread) => (
                 <button 
-                    key={user.name} 
+                    key={thread.id} 
                     className={cn(
                         "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-normal transition-colors",
-                        user.active 
-                            ? "bg-white shadow-sm border border-slate-100 text-black" 
-                            : "text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+                         "text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
                     )}
                 >
                     <div className="w-4 h-4 flex items-center justify-center">
-                         <div className="w-4 h-4 bg-slate-200 rounded-full flex items-center justify-center text-[8px] text-black font-bold">
-                            <User className="w-3 h-3 text-black fill-black" />
+                         <div className="w-4 h-4 bg-slate-200 rounded-full flex items-center justify-center text-[8px] text-black font-bold overflow-hidden">
+                            {thread.user.avatar.startsWith('http') ? (
+                                <img src={thread.user.avatar} alt={thread.user.name} className="w-full h-full object-cover" />
+                            ) : (
+                                <User className="w-3 h-3 text-black fill-black" />
+                            )}
                          </div>
                     </div>
-                    <span className="truncate">{user.name}</span>
-                    {user.count > 0 && (
-                        <span className="ml-auto text-xs text-black">{user.count}</span>
+                    <span className="truncate">{thread.user.name}</span>
+                    {thread.unreadCount > 0 && (
+                        <span className="ml-auto text-xs text-black">{thread.unreadCount}</span>
                     )}
                 </button>
             ))}

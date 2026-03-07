@@ -110,10 +110,14 @@ export const ChatList = ({ threads = MOCK_THREADS, selectedId, onSelect }: ChatL
             >
                 <div className="flex items-start gap-3">
                     <div className={cn(
-                        "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0",
+                        "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden",
                         selectedId === thread.id ? "bg-purple-100 text-purple-600" : "bg-orange-100 text-orange-600"
                     )}>
-                        {thread.user.name.charAt(0)}
+                        {thread.user.avatar.startsWith('http') ? (
+                            <img src={thread.user.avatar} alt={thread.user.name} className="w-full h-full object-cover" />
+                        ) : (
+                            thread.user.name.charAt(0)
+                        )}
                     </div>
                     <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-baseline mb-0.5">

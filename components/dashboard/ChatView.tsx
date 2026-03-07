@@ -2,7 +2,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MOCK_MESSAGES, Thread } from '@/lib/data';
+import { MOCK_MESSAGES, Thread, Message } from '@/lib/data';
+import { fetchThreadMessages } from '@/lib/api';
 import { Send, Image, Smile, Mic, Video, MoreVertical, Sparkles, Plus, Search, ArrowLeft, CornerUpLeft, FileText, CheckCheck, Clock, Save, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,14 +16,17 @@ interface ChatViewProps {
 }
 
 export const ChatView = ({ thread, onBack }: ChatViewProps) => {
-  const [messages, setMessages] = useState(MOCK_MESSAGES);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   // Reset messages or load specific messages when thread changes
   useEffect(() => {
     if (thread) {
-        // Here you would fetch messages for this thread
+        setMessages([]); // Clear previous messages
+        fetchThreadMessages(thread.id).then(msgs => {
+            setMessages(msgs);
+        });
     }
   }, [thread]);
 

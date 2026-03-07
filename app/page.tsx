@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ExtractionScreen } from '@/components/extraction/ExtractionScreen';
 import { Sidebar } from '@/components/dashboard/Sidebar';
 import { TopNavbar } from '@/components/dashboard/TopNavbar';
@@ -10,6 +10,7 @@ import { ChatView } from '@/components/dashboard/ChatView';
 import { RightPanel } from '@/components/dashboard/RightPanel';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Thread } from '@/lib/data';
+import { fetchInboxData, fetchUnreadCount } from '@/lib/api';
 import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/use-media-query';
@@ -17,15 +18,32 @@ import { useMediaQuery } from '@/hooks/use-media-query';
 export default function Home() {
   const [isExtracted, setIsExtracted] = useState(false);
   const [dashboardData, setDashboardData] = useState<Thread[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [selectedThread, setSelectedThread] = useState<Thread | undefined>(undefined);
   const isMobile = useMediaQuery('(max-width: 1024px)');
 
-  const handleExtractionComplete = (data: Thread[]) => {
-      setDashboardData(data);
-      if (data.length > 0) {
-          setSelectedThread(data[0]);
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [threads, count] = await Promise.all([
+          fetchInboxData(),
+          fetchUnreadCount()
+        ]);
+        setDashboardData(threads);
+        setUnreadCount(count);
+        if (threads.length > 0) {
+            setSelectedThread(threads[0]);
+        }
+      } catch (error) {
+        console.error("Failed to load dashboard data", error);
       }
+    }
+    loadData();
+  }, []);
+
+  const handleExtractionComplete = (data: Thread[]) => {
+      // Data is already loaded via useEffect, just enable the view
       setIsExtracted(true);
   };
 
@@ -72,7 +90,13 @@ export default function Home() {
                   zIndex: 30,
                 }}
               >
-                <Sidebar isExtracted={isExtracted} isOpen={false} onClose={() => {}} />
+                <Sidebar 
+                  isExtracted={isExtracted} 
+                  isOpen={false} 
+                  onClose={() => {}} 
+                  threads={dashboardData}
+                  unreadCount={unreadCount}
+                />
                 {isExtracted && (
                   <div className="h-full flex-1">
                     <ChatList 
@@ -87,7 +111,13 @@ export default function Home() {
 
             {/* Mobile Sidebar (Drawer) */}
             {isMobile && (
-              <Sidebar isExtracted={isExtracted} isOpen={isMobileOpen} onClose={() => setIsMobileOpen(false)} />
+              <Sidebar 
+                isExtracted={isExtracted} 
+                isOpen={isMobileOpen} 
+                onClose={() => setIsMobileOpen(false)} 
+                threads={dashboardData}
+                unreadCount={unreadCount}
+              />
             )}
 
             {/* Dashboard Content */}
