@@ -9,7 +9,7 @@ import { fetchInboxData } from '@/lib/api';
 import { Thread } from '@/lib/data';
 
 // Define the honeycombs
-export const honeycombs = [
+const honeycombs = [
   { id: 'inbox', label: 'Inbox', icon: Mail, color: 'text-blue-400' },
   { id: 'contacts', label: 'Contacts', icon: Users, color: 'text-purple-400' },
   { id: 'employees', label: 'AI Employees', icon: Bot, color: 'text-emerald-400' },

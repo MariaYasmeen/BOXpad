@@ -29,6 +29,7 @@ export interface Thread {
   tags?: string[];
   isAI?: boolean;
   notes?: string;
+  platform?: 'linkedin' | 'email' | 'other';
 }
 
 export const CURRENT_USER: User = {

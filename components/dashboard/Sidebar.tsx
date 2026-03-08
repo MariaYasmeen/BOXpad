@@ -2,9 +2,9 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Users, Bot, Workflow, Megaphone, Settings, Search, ChevronDown, User, MessageSquare, X } from 'lucide-react';
+import { Users, ChevronDown, User, X } from 'lucide-react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { honeycombs } from '@/components/extraction/ExtractionScreen';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -202,7 +202,7 @@ export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCoun
                         <div className="w-4 h-4 flex items-center justify-center">
                             <div className="w-4 h-4 bg-slate-200 rounded-full flex items-center justify-center text-[8px] text-black font-bold overflow-hidden">
                                 {thread.user.avatar.startsWith('http') ? (
-                                    <img src={thread.user.avatar} alt={thread.user.name} className="w-full h-full object-cover" />
+                                    <Image src={thread.user.avatar} alt={thread.user.name} width={16} height={16} className="w-full h-full object-cover" />
                                 ) : (
                                     <User className="w-3 h-3 text-black fill-black" />
                                 )}

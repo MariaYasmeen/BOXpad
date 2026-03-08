@@ -1,7 +1,7 @@
 
 'use client';
 
-import { User, Mail, Phone, Clock, PlusCircle, ChevronDown, Instagram, X } from 'lucide-react';
+import { User, ChevronDown, X, PlusCircle, Instagram } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Thread } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';

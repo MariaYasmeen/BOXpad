@@ -4,10 +4,9 @@
 import { useState, useEffect } from 'react';
 import { Thread, Message } from '@/lib/data';
 import { fetchThreadMessages } from '@/lib/api';
-import { Send, Image, Smile, Mic, Video, MoreVertical, Sparkles, Plus, Search, ArrowLeft, CornerUpLeft, FileText, CheckCheck, Clock, Save, History, Menu } from 'lucide-react';
+import { Image as ImageIcon, Smile, Mic, Video, MoreVertical, Sparkles, ArrowLeft, CornerUpLeft, FileText, CheckCheck, Save, History, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { messageSchema } from '@/lib/schemas';
-import { z } from 'zod';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface ChatViewProps {
@@ -20,12 +19,12 @@ interface ChatViewProps {
 export const ChatView = ({ thread, onBack, onToggleRightPanel, isRightPanelOpen }: ChatViewProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   // Reset messages or load specific messages when thread changes
   useEffect(() => {
     if (thread) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoading(true);
         setMessages([]); // Clear previous messages
         fetchThreadMessages(thread.id).then(msgs => {
@@ -72,7 +71,6 @@ export const ChatView = ({ thread, onBack, onToggleRightPanel, isRightPanelOpen 
         }
     ]);
     setNewMessage('');
-    setError(null);
   };
 
   return (
@@ -328,7 +326,7 @@ export const ChatView = ({ thread, onBack, onToggleRightPanel, isRightPanelOpen 
             >
                 <div className="flex items-center gap-3">
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <Image className="w-4 h-4" />
+                        <ImageIcon className="w-4 h-4" />
                      </button>
                      <button className="text-black hover:opacity-80 transition-opacity">
                         <Video className="w-4 h-4" />

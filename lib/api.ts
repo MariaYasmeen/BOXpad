@@ -73,7 +73,8 @@ export async function fetchInboxData(): Promise<Thread[]> {
         unreadCount: index < 3 ? 1 : 0, // Mark first few as unread
         isAI: index === 2 || index === 5, // Randomly assign AI status
         tags: [randomUser?.location?.city || 'Remote'],
-        notes: user.company.catchPhrase // Use company catchphrase as note
+        notes: user.company.catchPhrase, // Use company catchphrase as note
+        platform: index % 3 === 0 ? 'linkedin' : (index % 3 === 1 ? 'email' : 'other')
       };
     });
 

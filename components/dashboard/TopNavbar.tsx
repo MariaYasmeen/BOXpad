@@ -1,8 +1,7 @@
 'use client';
 
-import { Mail, Users, Bot, Workflow, Megaphone, Settings, Menu } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { MENU_ITEMS, CURRENT_USER } from '@/lib/data';
+import { Settings, Menu } from 'lucide-react';
+import { MENU_ITEMS } from '@/lib/data';
 import { NavButton } from './NavButton';
 
 interface TopNavbarProps {
@@ -110,7 +109,7 @@ export const TopNavbar = ({ activeTab = 'inbox', onTabChange, onMenuClick }: Top
             }}
           >
              <div className="w-5 h-5 bg-[#FF3B30] rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-                {CURRENT_USER.name.charAt(0)}
+                {'U'}
              </div>
              <span 
                 className="text-slate-900 dark:text-white truncate"
@@ -120,7 +119,7 @@ export const TopNavbar = ({ activeTab = 'inbox', onTabChange, onMenuClick }: Top
                     fontFamily: '"SF Compact", sans-serif'
                 }}
              >
-                {CURRENT_USER.name}
+                User
              </span>
           </div>
        </div>

@@ -11,7 +11,6 @@ import { RightPanel } from '@/components/dashboard/RightPanel';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Thread } from '@/lib/data';
 import { fetchInboxData, fetchUnreadCount } from '@/lib/api';
-import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useMediaQuery } from '@/hooks/use-media-query';
 
@@ -25,9 +24,8 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
   const isMobile = useMediaQuery('(max-width: 1024px)');
-  const isPhone = useMediaQuery('(max-width: 768px)');
   const isOverlayMode = useMediaQuery('(max-width: 1279px)');
-  const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1024px)');
+  const isPhone = useMediaQuery('(max-width: 640px)');
 
   useEffect(() => {
     // Automatically close right panel on mobile/tablet initially, open on desktop
@@ -56,7 +54,7 @@ export default function Home() {
     loadData();
   }, []);
 
-  const handleExtractionComplete = (data: Thread[]) => {
+  const handleExtractionComplete = () => {
       // Data is already loaded via useEffect, just enable the view
       setIsExtracted(true);
   };
