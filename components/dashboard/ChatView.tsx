@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Thread, Message } from '@/lib/data';
 import { fetchThreadMessages } from '@/lib/api';
-import { Send, Image, Smile, Mic, Video, MoreVertical, Sparkles, Plus, Search, ArrowLeft, CornerUpLeft, FileText, CheckCheck, Clock, Save, History } from 'lucide-react';
+import { Send, Image, Smile, Mic, Video, MoreVertical, Sparkles, Plus, Search, ArrowLeft, CornerUpLeft, FileText, CheckCheck, Clock, Save, History, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { messageSchema } from '@/lib/schemas';
 import { z } from 'zod';
@@ -138,10 +138,7 @@ export const ChatView = ({ thread, onBack, onToggleRightPanel, isRightPanelOpen 
                 className="transition-opacity hover:opacity-80 lg:flex items-center justify-center"
                 title="Toggle Right Panel"
             >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="15" y1="3" x2="15" y2="21"></line>
-                </svg>
+                <Menu className="w-full h-full" strokeWidth={2.5} />
             </button>
             {[MoreVertical, History, Save].map((Icon, i) => {
                 const isLast = i === 2;

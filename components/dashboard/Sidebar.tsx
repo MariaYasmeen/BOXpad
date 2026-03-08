@@ -42,10 +42,10 @@ export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCoun
       </AnimatePresence>
 
       <motion.aside 
-        initial={isMobile ? { x: "-100%" } : { width: 0, opacity: 0 }}
+        initial={isMobile ? { x: "-100%", width: "280px", opacity: 1 } : { width: 0, opacity: 0 }}
         animate={
           isMobile 
-            ? { x: isOpen ? "0%" : "-100%" }
+            ? { x: isOpen ? "0%" : "-100%", width: "280px", opacity: 1 }
             : { width: isExtracted ? '168.42px' : 0, opacity: isExtracted ? 1 : 0 }
         }
         transition={{ duration: 0.5, ease: "easeInOut" }}

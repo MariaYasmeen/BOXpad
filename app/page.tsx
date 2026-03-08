@@ -101,7 +101,11 @@ export default function Home() {
       <div className="flex flex-col h-screen overflow-hidden bg-slate-50 dark:bg-slate-950">
          {/* Top Navbar */}
          <div className="z-40 relative">
-            <TopNavbar activeTab={activeTab} onTabChange={handleTabChange} />
+            <TopNavbar 
+                activeTab={activeTab} 
+                onTabChange={handleTabChange} 
+                onMenuClick={() => setIsMobileOpen(true)}
+            />
          </div>
 
          <div className="flex flex-1 overflow-hidden relative">
@@ -167,16 +171,7 @@ export default function Home() {
                     transition: 'opacity 0.8s ease-out 0.4s'
                 }}
             >
-                {/* Mobile Header (Hidden on Desktop) */}
-                <div className="lg:hidden h-16 border-b border-slate-200 dark:border-slate-800 flex items-center px-4 justify-between bg-white dark:bg-slate-950 shrink-0">
-                   <div className="flex items-center gap-2">
-                     <button onClick={() => setIsMobileOpen(true)} className="p-2 -ml-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
-                        <Menu className="w-6 h-6" />
-                     </button>
-                   
-                   </div>
-                   <div className="w-8 h-8 bg-slate-200 dark:bg-slate-800 rounded-full" />
-                </div>
+              
 
                 <div className="flex-1 flex overflow-hidden">
                     {/* Chat List - Mobile Only */}

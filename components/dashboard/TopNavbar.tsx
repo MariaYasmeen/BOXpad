@@ -8,9 +8,10 @@ import { NavButton } from './NavButton';
 interface TopNavbarProps {
     activeTab?: string;
     onTabChange?: (tabId: string) => void;
+    onMenuClick?: () => void;
 }
 
-export const TopNavbar = ({ activeTab = 'inbox', onTabChange }: TopNavbarProps) => {
+export const TopNavbar = ({ activeTab = 'inbox', onTabChange, onMenuClick }: TopNavbarProps) => {
 
   return (
     <div 
@@ -81,7 +82,7 @@ export const TopNavbar = ({ activeTab = 'inbox', onTabChange }: TopNavbarProps) 
           </div>
 
           {/* Mobile Menu Icon */}
-          <button className="md:hidden p-1 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+          <button onClick={onMenuClick} className="md:hidden p-1 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
              <Menu className="w-5 h-5" />
           </button>
        </div>
