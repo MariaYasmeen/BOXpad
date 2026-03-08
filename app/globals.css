@@ -9,8 +9,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+--font-sans: "SF Compact Display", "SF Compact Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  
+  /* If you want to keep a separate mono font, keep it, or update it here */
+  --font-mono: "SF Mono", "ui-monospace", "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
 
   --animate-spin-slow: spin-slow 10s linear infinite;
   --animate-spin-reverse-slower: spin-reverse-slower 15s linear infinite;

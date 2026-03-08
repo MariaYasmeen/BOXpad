@@ -328,27 +328,27 @@ export const ChatView = ({ thread, onBack, onToggleRightPanel, isRightPanelOpen 
             >
                 <div className="flex items-center gap-3">
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <Image className="w-4 h-4" outline="black" />
+                        <Image className="w-4 h-4" />
                      </button>
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <Video className="w-4 h-4" outline="black" />
+                        <Video className="w-4 h-4" />
                      </button>
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <FileText className="w-4 h-4" outline="black" />
+                        <FileText className="w-4 h-4" />
                      </button>
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <Smile className="w-4 h-4" outline="black" />
+                        <Smile className="w-4 h-4" />
                      </button>
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <CornerUpLeft className="w-4 h-4" outline="black" />
+                        <CornerUpLeft className="w-4 h-4" />
                      </button>
                 </div>
                 <div className="flex items-center gap-3">
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <Sparkles className="w-4 h-4" outline="black" />
+                        <Sparkles className="w-4 h-4" />
                      </button>
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <Mic className="w-4 h-4" outline="black" />
+                        <Mic className="w-4 h-4" />
                      </button>
                 </div>
             </div>
