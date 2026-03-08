@@ -33,19 +33,150 @@ export const RightPanel = ({ thread, isLoading = false, onClose, isOverlay = fal
     return (
         <div 
             className={cn(
-                "flex flex-col bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 overflow-hidden font-sans",
+                "flex flex-col bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 overflow-y-auto no-scrollbar font-sans relative",
                 isOverlay && "h-full"
             )}
             style={containerStyle}
         >
-            <div className="p-4 space-y-6">
-                <Skeleton className="h-6 w-1/3" />
-                <div className="space-y-4">
-                    <Skeleton className="h-24 w-full" />
-                    <Skeleton className="h-40 w-full" />
-                    <Skeleton className="h-16 w-full" />
-                    <Skeleton className="h-24 w-full" />
+            {/* Header Skeleton */}
+            <div className="flex items-center justify-between px-4 pt-4 mb-2">
+                 <Skeleton className="h-6 w-16" />
+                 <Skeleton className="w-8 h-8 rounded-full" />
+            </div>
+
+            {/* Chat Data Section Skeleton */}
+            <div 
+                className="px-4 flex flex-col justify-center"
+                style={{
+                    width: isOverlay ? '100%' : '294.03509521484375px',
+                    height: '101.0526351928711px',
+                    paddingBottom: '5.61px',
+                    borderBottomWidth: '0.7px',
+                    borderBottomColor: '#D8DEE4',
+                    borderBottomStyle: 'solid'
+                }}
+            >
+                <div className="flex items-center justify-between mb-3">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="w-4 h-4" />
                 </div>
+                <div className="space-y-3">
+                     <div className="flex items-center justify-between">
+                        <Skeleton className="h-3 w-12" />
+                        <div className="flex items-center gap-2">
+                            <Skeleton className="w-4 h-4 rounded-full" />
+                            <Skeleton className="h-3 w-24" />
+                        </div>
+                     </div>
+                     <div className="flex items-center justify-between">
+                        <Skeleton className="h-3 w-10" />
+                        <div className="flex items-center gap-2">
+                            <Skeleton className="w-4 h-4 rounded-full" />
+                            <Skeleton className="h-3 w-20" />
+                        </div>
+                     </div>
+                </div>
+            </div>
+
+            {/* Contact Data Section Skeleton */}
+            <div 
+                className="px-4 flex flex-col justify-center"
+                style={{
+                    width: isOverlay ? '100%' : '294.03509521484375px',
+                    height: '189.4736785888672px',
+                    paddingBottom: '5.61px',
+                    borderBottomWidth: '0.7px',
+                    borderBottomColor: '#D8DEE4',
+                    borderBottomStyle: 'solid'
+                }}
+            >
+                 <div className="flex items-center justify-between mb-3">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="w-4 h-4" />
+                </div>
+                <div className="space-y-3">
+                    {[1, 2, 3, 4].map(i => (
+                        <div key={i} className="flex items-center justify-between">
+                            <Skeleton className="h-3 w-16" />
+                            <Skeleton className="h-3 w-32" />
+                        </div>
+                    ))}
+                     <div className="mt-1">
+                        <Skeleton className="h-3 w-12" />
+                     </div>
+                </div>
+            </div>
+
+            {/* Contact Labels Section Skeleton */}
+             <div 
+                className="px-4 flex flex-col justify-center"
+                style={{
+                    width: isOverlay ? '100%' : '294.03509521484375px',
+                    height: '65.96491241455078px',
+                    paddingBottom: '5.61px',
+                    borderBottomWidth: '0.7px',
+                    borderBottomColor: '#D8DEE4',
+                    borderBottomStyle: 'solid'
+                }}
+            >
+                <div className="flex items-center justify-between mb-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="w-4 h-4" />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                    <Skeleton className="h-5 w-20 rounded-full" />
+                    <Skeleton className="h-5 w-16 rounded-full" />
+                    <Skeleton className="w-5 h-5 rounded-full" />
+                </div>
+            </div>
+
+            {/* Notes Section Skeleton */}
+            <div 
+                className="px-4 flex flex-col justify-center"
+                style={{
+                    width: isOverlay ? '100%' : '294.03509521484375px',
+                    height: '101.0526351928711px',
+                    paddingBottom: '5.61px',
+                    borderBottomWidth: '0.7px',
+                    borderBottomColor: '#D8DEE4',
+                    borderBottomStyle: 'solid'
+                }}
+            >
+                <div className="flex items-center justify-between mb-2">
+                     <Skeleton className="h-4 w-12" />
+                     <Skeleton className="w-4 h-4" />
+                </div>
+                <div className="space-y-2">
+                     <Skeleton className="h-6 w-20 rounded" />
+                     <Skeleton className="h-8 w-full rounded" />
+                </div>
+            </div>
+
+            {/* Other Chats Section Skeleton */}
+            <div 
+                 className="px-4 flex flex-col justify-center"
+                 style={{
+                    width: isOverlay ? '100%' : '294.03509521484375px',
+                    height: '82.94737243652344px',
+                    paddingBottom: '5.61px',
+                    borderBottomWidth: '0.7px',
+                    borderBottomColor: '#D8DEE4',
+                    borderBottomStyle: 'solid'
+                 }}
+            >
+                 <div className="flex items-center justify-between mb-2">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="w-4 h-4" />
+                 </div>
+                 
+                 <div className="flex items-center gap-3">
+                     <Skeleton className="w-8 h-8 rounded-full shrink-0" />
+                     <div className="flex-1 min-w-0 space-y-1">
+                         <Skeleton className="h-3 w-16" />
+                         <Skeleton className="h-2 w-12" />
+                     </div>
+                     <Skeleton className="h-2 w-10 ml-auto" />
+                 </div>
             </div>
         </div>
     );

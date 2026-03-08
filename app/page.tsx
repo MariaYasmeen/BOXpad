@@ -129,6 +129,7 @@ export default function Home() {
                   unreadCount={unreadCount}
                   activeTab={activeTab}
                   onTabChange={handleTabChange}
+                  isLoading={isLoading}
                 />
                 {isExtracted && (
                   <div className="h-full flex-1">
@@ -153,6 +154,7 @@ export default function Home() {
                 unreadCount={unreadCount}
                 activeTab={activeTab}
                 onTabChange={handleTabChange}
+                isLoading={isLoading}
               />
             )}
 

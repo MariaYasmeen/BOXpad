@@ -6,6 +6,7 @@ import { Mail, Users, Bot, Workflow, Megaphone, Settings, Search, ChevronDown, U
 import { cn } from '@/lib/utils';
 import { honeycombs } from '@/components/extraction/ExtractionScreen';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { Skeleton } from '@/components/ui/skeleton';
 
 import { Thread, MENU_ITEMS } from '@/lib/data';
 import { NavButton } from './NavButton';
@@ -18,9 +19,10 @@ interface SidebarProps {
   unreadCount?: number;
   activeTab?: string;
   onTabChange?: (tabId: string) => void;
+  isLoading?: boolean;
 }
 
-export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCount = 0, activeTab = 'inbox', onTabChange }: SidebarProps) => {
+export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCount = 0, activeTab = 'inbox', onTabChange, isLoading = false }: SidebarProps) => {
   const isMobile = useMediaQuery('(max-width: 1024px)');
 
 
@@ -113,37 +115,56 @@ export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCoun
                 flexDirection: 'column'
             } : {}}
          >
-            {/* <div className="text-xs font-semibold text-slate-400 px-3 mb-2 uppercase tracking-wider">Dashboard</div> */}
-            <motion.button
-                className="w-full flex items-center px-3 py-1.5 rounded-lg text-xs font-normal transition-colors text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
-                style={!isMobile ? { gap: '5.61px' } : { gap: '12px' }}
-            >
-                <div style={!isMobile ? { width: '14px', height: '14px' } : { width: '16px', height: '16px' }}>
-                    <User className="w-full h-full fill-black" />
-                </div>
-                <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>My Inbox</span>
-            </motion.button>
-            <motion.button
-                className="w-full flex items-center px-3 py-1.5 rounded-lg text-xs font-normal transition-colors text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
-                style={!isMobile ? { gap: '5.61px' } : { gap: '12px' }}
-            >
-                <div style={!isMobile ? { width: '14px', height: '14px' } : { width: '16px', height: '16px' }}>
-                    <Users className="w-full h-full fill-black" />
-                </div>
-                <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>All</span>
-                {unreadCount > 0 && <span className="ml-auto text-xs text-black">{unreadCount}</span>}
-            </motion.button>
-            <motion.button
-                className="w-full flex items-center px-3 py-1.5 rounded-lg text-xs font-normal transition-colors text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
-                style={!isMobile ? { gap: '5.61px' } : { gap: '12px' }}
-            >
-                <div 
-                    className="border-2 border-black rounded-full border-dashed flex items-center justify-center"
-                    style={!isMobile ? { width: '14px', height: '14px' } : { width: '16px', height: '16px' }}
-                 />
-                <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>Unassigned</span>
-                {/* <span className="ml-auto text-xs text-black">5</span> */}
-            </motion.button>
+            {isLoading ? (
+                <>
+                    <div className="flex items-center px-3 py-1.5 gap-2">
+                        <Skeleton className="w-4 h-4 rounded-md" />
+                        <Skeleton className="h-3 w-20" />
+                    </div>
+                    <div className="flex items-center px-3 py-1.5 gap-2">
+                         <Skeleton className="w-4 h-4 rounded-md" />
+                         <Skeleton className="h-3 w-16" />
+                    </div>
+                    <div className="flex items-center px-3 py-1.5 gap-2">
+                         <Skeleton className="w-4 h-4 rounded-full" />
+                         <Skeleton className="h-3 w-24" />
+                    </div>
+                </>
+            ) : (
+                <>
+                    {/* <div className="text-xs font-semibold text-slate-400 px-3 mb-2 uppercase tracking-wider">Dashboard</div> */}
+                    <motion.button
+                        className="w-full flex items-center px-3 py-1.5 rounded-lg text-xs font-normal transition-colors text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+                        style={!isMobile ? { gap: '5.61px' } : { gap: '12px' }}
+                    >
+                        <div style={!isMobile ? { width: '14px', height: '14px' } : { width: '16px', height: '16px' }}>
+                            <User className="w-full h-full fill-black" />
+                        </div>
+                        <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>My Inbox</span>
+                    </motion.button>
+                    <motion.button
+                        className="w-full flex items-center px-3 py-1.5 rounded-lg text-xs font-normal transition-colors text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+                        style={!isMobile ? { gap: '5.61px' } : { gap: '12px' }}
+                    >
+                        <div style={!isMobile ? { width: '14px', height: '14px' } : { width: '16px', height: '16px' }}>
+                            <Users className="w-full h-full fill-black" />
+                        </div>
+                        <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>All</span>
+                        {unreadCount > 0 && <span className="ml-auto text-xs text-black">{unreadCount}</span>}
+                    </motion.button>
+                    <motion.button
+                        className="w-full flex items-center px-3 py-1.5 rounded-lg text-xs font-normal transition-colors text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+                        style={!isMobile ? { gap: '5.61px' } : { gap: '12px' }}
+                    >
+                        <div 
+                            className="border-2 border-black rounded-full border-dashed flex items-center justify-center"
+                            style={!isMobile ? { width: '14px', height: '14px' } : { width: '16px', height: '16px' }}
+                        />
+                        <span className="flex-1 truncate text-left" style={!isMobile ? { height: '13px', lineHeight: '13px', display: 'flex', alignItems: 'center' } : {}}>Unassigned</span>
+                        {/* <span className="ml-auto text-xs text-black">5</span> */}
+                    </motion.button>
+                </>
+            )}
          </div>
 
          
@@ -160,29 +181,40 @@ export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCoun
                 <div className="text-sm font-medium">Users</div>
                 <ChevronDown className="w-3 h-3" />
             </div>
-            {threads.map((thread) => (
-                <button 
-                    key={thread.id} 
-                    className={cn(
-                        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-normal transition-colors",
-                         "text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
-                    )}
-                >
-                    <div className="w-4 h-4 flex items-center justify-center">
-                         <div className="w-4 h-4 bg-slate-200 rounded-full flex items-center justify-center text-[8px] text-black font-bold overflow-hidden">
-                            {thread.user.avatar.startsWith('http') ? (
-                                <img src={thread.user.avatar} alt={thread.user.name} className="w-full h-full object-cover" />
-                            ) : (
-                                <User className="w-3 h-3 text-black fill-black" />
-                            )}
-                         </div>
-                    </div>
-                    <span className="truncate">{thread.user.name}</span>
-                    {thread.unreadCount > 0 && (
-                        <span className="ml-auto text-xs text-black">{thread.unreadCount}</span>
-                    )}
-                </button>
-            ))}
+            {isLoading ? (
+                <>
+                    {[1, 2, 3, 4, 5].map((i) => (
+                        <div key={i} className="flex items-center gap-3 px-3 py-2">
+                            <Skeleton className="w-4 h-4 rounded-full shrink-0" />
+                            <Skeleton className="h-3 w-24" />
+                        </div>
+                    ))}
+                </>
+            ) : (
+                threads.map((thread) => (
+                    <button 
+                        key={thread.id} 
+                        className={cn(
+                            "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-normal transition-colors",
+                            "text-black dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900"
+                        )}
+                    >
+                        <div className="w-4 h-4 flex items-center justify-center">
+                            <div className="w-4 h-4 bg-slate-200 rounded-full flex items-center justify-center text-[8px] text-black font-bold overflow-hidden">
+                                {thread.user.avatar.startsWith('http') ? (
+                                    <img src={thread.user.avatar} alt={thread.user.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <User className="w-3 h-3 text-black fill-black" />
+                                )}
+                            </div>
+                        </div>
+                        <span className="truncate">{thread.user.name}</span>
+                        {thread.unreadCount > 0 && (
+                            <span className="ml-auto text-xs text-black">{thread.unreadCount}</span>
+                        )}
+                    </button>
+                ))
+            )}
          </div>
 
          {/* Channels */}
