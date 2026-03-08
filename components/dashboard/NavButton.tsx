@@ -1,6 +1,5 @@
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
 
 interface NavButtonProps {
   label: string;
@@ -9,7 +8,6 @@ interface NavButtonProps {
   onClick?: () => void;
   variant?: 'navbar' | 'sidebar';
   className?: string;
-  layoutId?: string;
 }
 
 export const NavButton = ({ 
@@ -18,8 +16,7 @@ export const NavButton = ({
   isActive, 
   onClick, 
   variant = 'navbar',
-  className,
-  layoutId
+  className 
 }: NavButtonProps) => {
   
   if (variant === 'sidebar') {
@@ -45,7 +42,7 @@ export const NavButton = ({
     <button
         onClick={onClick}
         className={cn(
-            "flex items-center justify-center transition-all relative",
+            "flex items-center justify-center transition-all",
             isActive 
                 ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold border border-slate-200 dark:border-slate-700" 
                 : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-900 font-medium",
@@ -67,17 +64,6 @@ export const NavButton = ({
             minWidth: label === 'Inbox' ? '59.68px' : 'auto',
         }}
     >
-        {layoutId && (
-            <motion.div
-                layoutId={layoutId}
-                className={cn("absolute inset-0 rounded-[5.61px]", isActive ? "bg-slate-100 dark:bg-slate-800" : "")}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                style={{ zIndex: -1 }}
-            />
-        )}
         <Icon 
             className={cn(
                 isActive ? "stroke-[2.5px]" : "stroke-2"

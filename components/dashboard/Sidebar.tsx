@@ -52,7 +52,7 @@ export const Sidebar = ({ isExtracted, isOpen, onClose, threads = [], unreadCoun
           isMobile ? "fixed inset-y-0 left-0 z-50 w-[280px]" : "relative"
         )}
         style={!isMobile ? {
-            width: isExtracted ? '168.42px' : 0,
+            height: '609.82px',
             borderTopLeftRadius: '11.23px',
             borderBottomLeftRadius: '11.23px',
             borderBottomWidth: '0.7px'

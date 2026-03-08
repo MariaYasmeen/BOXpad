@@ -96,18 +96,17 @@ export const ChatList = ({ threads = [], selectedId, onSelect, isLoading = false
         } : {}}
       >
         {isLoading ? (
-            // Skeleton Loading State
-            Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="p-3 rounded-xl border border-transparent bg-white dark:bg-slate-900">
-                    <div className="flex items-center gap-3">
-                        <Skeleton className="w-8 h-8 rounded-full shrink-0" />
-                        <div className="flex-1 min-w-0 space-y-2">
-                            <div className="flex justify-between items-baseline">
-                                <Skeleton className="h-3 w-20" />
-                                <Skeleton className="h-2 w-8" />
+            Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="flex flex-col gap-2 p-3 bg-white dark:bg-slate-950 border-b border-slate-50 dark:border-slate-900">
+                    <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                            <Skeleton className="w-10 h-10 rounded-full" />
+                            <div className="space-y-2">
+                                <Skeleton className="h-3 w-24" />
+                                <Skeleton className="h-3 w-32" />
                             </div>
-                            <Skeleton className="h-2 w-full" />
                         </div>
+                        <Skeleton className="h-3 w-8" />
                     </div>
                 </div>
             ))
@@ -117,33 +116,51 @@ export const ChatList = ({ threads = [], selectedId, onSelect, isLoading = false
                     key={thread.id}
                     onClick={() => onSelect?.(thread)}
                     className={cn(
-                        "p-3 cursor-pointer rounded-xl border border-transparent transition-all relative group hover:shadow-sm",
-                        selectedId === thread.id 
-                            ? "bg-white shadow-sm border-slate-100" 
-                            : "bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-50 dark:border-slate-800"
+                        "cursor-pointer transition-colors p-3 bg-white dark:bg-slate-950 border-b border-slate-50 dark:border-slate-900 hover:bg-slate-50 dark:hover:bg-slate-900 rounded-lg",
+                        selectedId === thread.id && "bg-slate-50 dark:bg-slate-900  "
                     )}
                 >
-                    <div className="flex items-start gap-3">
-                        <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden",
-                            selectedId === thread.id ? "bg-purple-100 text-purple-600" : "bg-orange-100 text-orange-600"
-                        )}>
-                            {thread.user.avatar.startsWith('http') ? (
-                                <img src={thread.user.avatar} alt={thread.user.name} className="w-full h-full object-cover" />
-                            ) : (
-                                thread.user.name.charAt(0)
-                            )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <div className="flex justify-between items-baseline mb-0.5">
-                                <h3 className="font-bold text-xs text-slate-900 dark:text-slate-200 truncate">
+                    <div className="flex items-start justify-between mb-1">
+                        <div className="flex items-center gap-3">
+                            <div className="relative">
+                                <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold">
+                                    {thread.user.avatar ? (
+                                        <img src={thread.user.avatar} alt={thread.user.name} className="w-full h-full rounded-full object-cover" />
+                                    ) : (
+                                        thread.user.name.charAt(0)
+                                    )}
+                                </div>
+                                {thread.unread && (
+                                    <div className="absolute top-0 right-0 w-3 h-3  srounded-full border-2 border-white dark:border-slate-950" />
+                                )}
+                            </div>
+                            <div>
+                                <h3 className={cn(
+                                    "font-semibold text-sm text-slate-900 dark:text-white",
+                                    thread.unread && "font-bold"
+                                )}>
                                     {thread.user.name}
                                 </h3>
-                                <span className="text-[10px] text-slate-400 font-medium">{thread.timestamp}</span>
+                                <p className={cn(
+                                    "text-xs text-slate-500 truncate max-w-[120px]",
+                                    thread.unread && "text-slate-900 dark:text-slate-300 font-medium"
+                                )}>
+                                    {thread.lastMessage}
+                                </p>
                             </div>
-                            <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate leading-tight">
-                                {thread.lastMessage}
-                            </p>
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                            <span className="text-[10px] text-slate-400 whitespace-nowrap">{thread.timestamp}</span>
+                            {thread.platform === 'linkedin' && (
+                                <div className="bg-[#0077B5] p-1 rounded-sm">
+                                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                                </div>
+                            )}
+                            {thread.platform === 'email' && (
+                                <div className="bg-orange-500 p-1 rounded-sm">
+                                    <svg className="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
