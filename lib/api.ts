@@ -1,7 +1,40 @@
 
-import { Thread, Message, User } from './data';
+import { Thread, Message } from './data';
 
-const CURRENT_USER_EMAIL = "Michael.Johnson@example.com";
+interface APIUser {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  company: {
+    name: string;
+    catchPhrase: string;
+  };
+}
+
+interface APIPost {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+}
+
+interface APITodo {
+    completed: boolean;
+}
+
+interface APIComment {
+    id: number;
+    postId: number;
+    name: string;
+    email: string;
+    body: string;
+}
+
+interface RandomUserResult {
+    picture: { thumbnail: string };
+    location: { city: string };
+}
 
 export async function fetchInboxData(): Promise<Thread[]> {
   try {
@@ -12,16 +45,16 @@ export async function fetchInboxData(): Promise<Thread[]> {
       fetch('https://randomuser.me/api/?results=10')
     ]);
 
-    const users = await usersResponse.json();
-    const posts = await postsResponse.json();
+    const users: APIUser[] = await usersResponse.json();
+    const posts: APIPost[] = await postsResponse.json();
     const randomUsersData = await randomUsersResponse.json();
-    const randomUsers = randomUsersData.results;
+    const randomUsers: RandomUserResult[] = randomUsersData.results;
 
     // Map these users to our Thread structure
-    const apiThreads: Thread[] = users.slice(0, 10).map((user: any, index: number) => {
+    const apiThreads: Thread[] = users.slice(0, 10).map((user, index) => {
       const randomUser = randomUsers[index];
       // Find a post by this user to use as last message preview
-      const userPost = posts.find((p: any) => p.userId === user.id);
+      const userPost = posts.find((p) => p.userId === user.id);
       
       return {
         id: user.id, // Use real ID
@@ -56,9 +89,9 @@ export async function fetchThreadMessages(threadId: number): Promise<Message[]> 
   try {
     // Use comments endpoint as messages
     const response = await fetch(`https://jsonplaceholder.typicode.com/comments?postId=${threadId}`);
-    const comments = await response.json();
+    const comments: APIComment[] = await response.json();
 
-    return comments.map((comment: any, index: number) => {
+    return comments.map((comment, index) => {
       // Logic gate for sender: alternating or based on email logic if we could match it.
       // Since JSONPlaceholder emails are random, we'll force some to be "me" (senderId: 0)
       // to demonstrate the UI requirement: "If the email matches the current user... purple bubble"
@@ -84,9 +117,9 @@ export async function fetchThreadMessages(threadId: number): Promise<Message[]> 
 export async function fetchUnreadCount(): Promise<number> {
   try {
     const response = await fetch('https://jsonplaceholder.typicode.com/todos');
-    const todos = await response.json();
+    const todos: APITodo[] = await response.json();
     // Filter completed: false
-    return todos.filter((todo: any) => !todo.completed).length;
+    return todos.filter((todo) => !todo.completed).length;
   } catch (error) {
     console.error("Failed to fetch todos", error);
     return 0; // Fallback

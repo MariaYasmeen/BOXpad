@@ -207,7 +207,7 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
                                             opacity: 1,
                                             display: 'flex',
                                             alignItems: 'center',
-                                            maxWidth: '300.53px',
+                                            maxWidth: '210.53px',
                                             width: 'fit-content',
                                             height: 'auto',
                                             minHeight: 'auto'
@@ -231,7 +231,7 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
                                             opacity: 1,
                                             display: 'flex',
                                             alignItems: 'center',
-                                            maxWidth: '300.53px',
+                                            maxWidth: '210.53px',
                                             width: 'fit-content',
                                             height: 'auto',
                                             minHeight: 'auto'
@@ -306,27 +306,27 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
             >
                 <div className="flex items-center gap-3">
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <Image className="w-4 h-4" border="black" />
+                        <Image className="w-4 h-4" outline="black" />
                      </button>
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <Video className="w-4 h-4" border="black" />
+                        <Video className="w-4 h-4" outline="black" />
                      </button>
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <FileText className="w-4 h-4" border="black" />
+                        <FileText className="w-4 h-4" outline="black" />
                      </button>
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <Smile className="w-4 h-4" border="black" />
+                        <Smile className="w-4 h-4" outline="black" />
                      </button>
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <CornerUpLeft className="w-4 h-4" border="black" />
+                        <CornerUpLeft className="w-4 h-4" outline="black" />
                      </button>
                 </div>
                 <div className="flex items-center gap-3">
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <Sparkles className="w-4 h-4" border="black" />
+                        <Sparkles className="w-4 h-4" outline="black" />
                      </button>
                      <button className="text-black hover:opacity-80 transition-opacity">
-                        <Mic className="w-4 h-4" border="black" />
+                        <Mic className="w-4 h-4" outline="black" />
                      </button>
                 </div>
             </div>
