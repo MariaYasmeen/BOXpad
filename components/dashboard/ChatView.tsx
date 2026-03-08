@@ -77,8 +77,7 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
     <div 
         className="flex-1 flex flex-col bg-white dark:bg-slate-950 relative font-sans overflow-hidden"
         style={{
-            borderRadius: '8.42px',
-            marginTop: '10px',
+            borderRadius: '8.42px', 
             marginBottom: '10px',
             height: 'calc(100% - 20px)'
         }}
@@ -208,7 +207,10 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
                                             opacity: 1,
                                             display: 'flex',
                                             alignItems: 'center',
-                                            maxWidth: '70%'
+                                            maxWidth: '300.53px',
+                                            width: 'fit-content',
+                                            height: 'auto',
+                                            minHeight: 'auto'
                                         }}
                                         className="text-slate-900 text-[13px]"
                                     >
@@ -229,7 +231,10 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
                                             opacity: 1,
                                             display: 'flex',
                                             alignItems: 'center',
-                                            maxWidth: '70%'
+                                            maxWidth: '300.53px',
+                                            width: 'fit-content',
+                                            height: 'auto',
+                                            minHeight: 'auto'
                                         }}
                                         className="text-slate-900 text-[13px]"
                                     >
