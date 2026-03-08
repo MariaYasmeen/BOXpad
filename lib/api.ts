@@ -96,8 +96,7 @@ export async function fetchThreadMessages(threadId: number): Promise<Message[]> 
       // Since JSONPlaceholder emails are random, we'll force some to be "me" (senderId: 0)
       // to demonstrate the UI requirement: "If the email matches the current user... purple bubble"
       
-      // For demo purposes, make every 2nd message sent by "me" to show conversation flow
-      const isMe = index % 2 === 1; 
+       const isMe = index % 2 === 1; 
       
       return {
         id: comment.id,
