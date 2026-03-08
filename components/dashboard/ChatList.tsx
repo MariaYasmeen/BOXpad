@@ -97,7 +97,7 @@ export const ChatList = ({ threads = [], selectedId, onSelect, isLoading = false
       >
         {isLoading ? (
             Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="flex flex-col gap-2 p-3 bg-white dark:bg-slate-950 border-b border-slate-50 dark:border-slate-900">
+                <div key={i} className="flex flex-col gap-2 p-1 bg-white dark:bg-slate-950 border-b border-slate-50 dark:border-slate-900">
                     <div className="flex items-start justify-between">
                         <div className="flex items-center gap-3">
                             <Skeleton className="w-10 h-10 rounded-full" />

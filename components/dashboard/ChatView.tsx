@@ -38,8 +38,7 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
         <div 
             className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-slate-950 text-slate-400 font-sans"
             style={{
-                borderRadius: '8.42px',
-                marginTop: '10px',
+                borderRadius: '8.42px', 
             }}
         >
             <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
@@ -76,10 +75,12 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
 
   return (
     <div 
-        className="flex-1 flex flex-col bg-white dark:bg-slate-950 relative font-sans h-full overflow-hidden"
+        className="flex-1 flex flex-col bg-white dark:bg-slate-950 relative font-sans overflow-hidden"
         style={{
             borderRadius: '8.42px',
             marginTop: '10px',
+            marginBottom: '10px',
+            height: 'calc(100% - 20px)'
         }}
     >
       {/* Header */}
@@ -111,35 +112,40 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
         {/* Icons Group */}
         <div 
             style={{
-                width: '78.6px',
+                width: 'auto',
                 height: '22.46px',
-                gap: '5.61px',
+                gap: '8.42px',
                 display: 'flex',
                 alignItems: 'center'
             }}
         >
-            {[MoreVertical, History, Save].map((Icon, i) => (
-                <button 
-                    key={i} 
-                    style={{
-                        width: '22.46px',
-                        height: '22.46px',
-                        borderRadius: '5.61px',
-                        padding: '4.21px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                    className="hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 transition-colors"
-                >
-                    <Icon className="w-full h-full" strokeWidth={2.5} />
-                </button>
-            ))}
+            {[MoreVertical, History, Save].map((Icon, i) => {
+                const isLast = i === 2;
+                return (
+                    <button 
+                        key={i} 
+                        style={{
+                            width: '22.46px',
+                            height: '22.46px',
+                            borderRadius: '5.61px',
+                            padding: '4.21px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: isLast ? '#000000' : '#EBEBEB',
+                            color: isLast ? '#ffffff' : '#000000'
+                        }}
+                        className="transition-opacity hover:opacity-80"
+                    >
+                        <Icon className="w-full h-full" strokeWidth={2.5} />
+                    </button>
+                );
+            })}
         </div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-[9.82px] no-scrollbar min-h-0">
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-[9.82px] no-scrollbar min-h-0">
         {/* Date Pill - Dynamic */}
         <div className="flex justify-center mb-6">
             <div className="bg-slate-100 dark:bg-slate-800 px-4 py-1.5 rounded-[4px] text-[10px] font-semibold text-slate-500">
@@ -165,39 +171,79 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
                 </div>
             </div>
         ) : (
-            messages.map((msg) => (
-                <div
-                    key={msg.id}
-                    className={cn(
-                        "flex w-full group items-start gap-2",
-                        msg.senderId === 0 ? "flex-row-reverse" : "flex-row"
-                    )}
-                >
-                    {/* Timestamp Outside */}
-                    <span className={cn(
-                        "text-[10px] text-slate-400 mt-1 flex-shrink-0",
-                        msg.senderId === 0 ? "text-right" : "text-left"
-                    )}>
-                        {msg.timestamp}
-                    </span>
-
-                    <div className={cn(
-                        "max-w-[70%] p-3 rounded-2xl text-sm relative shadow-sm",
-                        msg.senderId === 0 
-                            ? "bg-[#EFE9FA] dark:bg-purple-900/20 text-slate-900 dark:text-slate-100 rounded-tr-none" 
-                            : "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-tl-none"
-                    )}>
-                        <p className="leading-relaxed text-[13px]">{msg.content}</p>
-                        
-                        {/* Double Tick for Outgoing (Inside bubble, bottom right) */}
-                        {msg.senderId === 0 && (
-                            <div className="absolute bottom-1 right-1">
-                                <CheckCheck className="w-3 h-3 text-blue-500" />
-                            </div>
+            messages.map((msg) => {
+                const isSent = msg.senderId === 0;
+                return (
+                    <div
+                        key={msg.id}
+                        className={cn(
+                            "flex w-full mb-[9.82px]",
+                            isSent ? "justify-end" : "justify-start"
                         )}
+                    >
+                        <div
+                            style={{
+                                width: 'auto',
+                                gap: '5.61px',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'flex-start',
+                                opacity: 1,
+                                padding:"5px",
+                            }}
+                        >
+                            {/* Sent Message Layout: Timestamp/Tick (Left) + Bubble (Right) */}
+                            {isSent && (
+                                <>
+                                    <div className="flex flex-col items-end pt-1 gap-1 min-w-[18px] ml-auto">
+                                        <span className="text-[10px] text-black leading-none whitespace-nowrap">{msg.timestamp}</span>
+                                        <CheckCheck className="w-3 h-3 text-blue-500" />
+                                    </div>
+                                    <div
+                                        style={{
+                                            borderRadius: '8.42px',
+                                            padding: '10.61px',
+                                            backgroundColor: '#EDE3FD',
+                                            gap: '8.42px',
+                                            opacity: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            maxWidth: '70%'
+                                        }}
+                                        className="text-slate-900 text-[13px]"
+                                    >
+                                        <p className="leading-tight w-full">{msg.content}</p>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Received Message Layout: Bubble (Left) + Timestamp/Tick (Right) */}
+                            {!isSent && (
+                                <>
+                                    <div
+                                        style={{
+                                            borderRadius: '8.42px',
+                                            padding: '10.61px',
+                                            backgroundColor: '#EFF2F2',
+                                            gap: '8.42px',
+                                            opacity: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            maxWidth: '70%'
+                                        }}
+                                        className="text-slate-900 text-[13px]"
+                                    >
+                                        <p className="leading-tight w-full">{msg.content}</p>
+                                    </div>
+                                    <div className="flex flex-col items-start pt-1 gap-1 min-w-[18px]">
+                                        <span className="text-[10px] text-black leading-none whitespace-nowrap">{msg.timestamp}</span>
+                                    </div>
+                                </>
+                            )}
+                        </div>
                     </div>
-                </div>
-            ))
+                );
+            })
         )}
       </div>
 
@@ -245,7 +291,7 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
                 style={{
                     width: '100%',
                     height: '33.68px',
-                    gap: '2.81px',
+                    gap: '2.81px', 
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
@@ -254,28 +300,28 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
                 }}
             >
                 <div className="flex items-center gap-3">
-                     <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                        <Image className="w-4 h-4" />
+                     <button className="text-black hover:opacity-80 transition-opacity">
+                        <Image className="w-4 h-4" border="black" />
                      </button>
-                     <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                        <Video className="w-4 h-4" />
+                     <button className="text-black hover:opacity-80 transition-opacity">
+                        <Video className="w-4 h-4" border="black" />
                      </button>
-                     <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                        <FileText className="w-4 h-4" />
+                     <button className="text-black hover:opacity-80 transition-opacity">
+                        <FileText className="w-4 h-4" border="black" />
                      </button>
-                     <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                        <Smile className="w-4 h-4" />
+                     <button className="text-black hover:opacity-80 transition-opacity">
+                        <Smile className="w-4 h-4" border="black" />
                      </button>
-                     <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                        <CornerUpLeft className="w-4 h-4" />
+                     <button className="text-black hover:opacity-80 transition-opacity">
+                        <CornerUpLeft className="w-4 h-4" border="black" />
                      </button>
                 </div>
                 <div className="flex items-center gap-3">
-                     <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                        <Sparkles className="w-4 h-4" />
+                     <button className="text-black hover:opacity-80 transition-opacity">
+                        <Sparkles className="w-4 h-4" border="black" />
                      </button>
-                     <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                        <Mic className="w-4 h-4" />
+                     <button className="text-black hover:opacity-80 transition-opacity">
+                        <Mic className="w-4 h-4" border="black" />
                      </button>
                 </div>
             </div>

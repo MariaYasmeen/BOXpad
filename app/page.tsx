@@ -101,10 +101,10 @@ export default function Home() {
               <div
                 style={{
                   position: 'absolute',
-                  top: '10.53px',
+                  top: '10px',
                   left: '7.72px',
                   width: '417.54px',
-                  height: '609.82px',
+                  height: 'calc(100% - 20px)',
                   borderRadius: '8.42px',
                   display: 'flex',
                   zIndex: 30,
@@ -185,7 +185,7 @@ export default function Home() {
                     
                     {/* Chat View */}
                     <div className={cn(
-                        "flex-1 flex-col min-w-0 bg-white dark:bg-slate-950 h-full",
+                        "flex-1 flex-col min-w-0 bg-white dark:bg-slate-950",
                         selectedThread ? "flex" : "hidden md:flex"
                     )}>
                         <ChatView 
