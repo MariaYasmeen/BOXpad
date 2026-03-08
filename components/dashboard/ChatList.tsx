@@ -5,16 +5,17 @@ import { useState, useEffect } from 'react';
 import { Search, Plus, Filter, ArrowDownUp } from 'lucide-react';
 import { Thread, CURRENT_USER } from '@/lib/data';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ChatListProps {
   threads?: Thread[];
   selectedId?: number;
   onSelect?: (thread: Thread) => void;
+  isLoading?: boolean;
 }
 
-export const ChatList = ({ threads = [], selectedId, onSelect }: ChatListProps) => {
+export const ChatList = ({ threads = [], selectedId, onSelect, isLoading = false }: ChatListProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const isMobile = useMediaQuery('(max-width: 1024px)');
 
@@ -94,45 +95,60 @@ export const ChatList = ({ threads = [], selectedId, onSelect }: ChatListProps) 
             flexDirection: 'column'
         } : {}}
       >
-        {filteredThreads.map((thread) => (
-            <motion.div
-                key={thread.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-                onClick={() => onSelect?.(thread)}
-                className={cn(
-                    "p-3 cursor-pointer rounded-xl border border-transparent transition-all relative group hover:shadow-sm",
-                    selectedId === thread.id 
-                        ? "bg-white shadow-sm border-slate-100" 
-                        : "bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-50 dark:border-slate-800"
-                )}
-            >
-                <div className="flex items-start gap-3">
-                    <div className={cn(
-                        "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden",
-                        selectedId === thread.id ? "bg-purple-100 text-purple-600" : "bg-orange-100 text-orange-600"
-                    )}>
-                        {thread.user.avatar.startsWith('http') ? (
-                            <img src={thread.user.avatar} alt={thread.user.name} className="w-full h-full object-cover" />
-                        ) : (
-                            thread.user.name.charAt(0)
-                        )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-baseline mb-0.5">
-                            <h3 className="font-bold text-xs text-slate-900 dark:text-slate-200 truncate">
-                                {thread.user.name}
-                            </h3>
-                            <span className="text-[10px] text-slate-400 font-medium">{thread.timestamp}</span>
+        {isLoading ? (
+            // Skeleton Loading State
+            Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="p-3 rounded-xl border border-transparent bg-white dark:bg-slate-900">
+                    <div className="flex items-center gap-3">
+                        <Skeleton className="w-8 h-8 rounded-full shrink-0" />
+                        <div className="flex-1 min-w-0 space-y-2">
+                            <div className="flex justify-between items-baseline">
+                                <Skeleton className="h-3 w-20" />
+                                <Skeleton className="h-2 w-8" />
+                            </div>
+                            <Skeleton className="h-2 w-full" />
                         </div>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate leading-tight">
-                            {thread.lastMessage}
-                        </p>
                     </div>
                 </div>
-            </motion.div>
-        ))}
+            ))
+        ) : (
+            filteredThreads.map((thread) => (
+                <div
+                    key={thread.id}
+                    onClick={() => onSelect?.(thread)}
+                    className={cn(
+                        "p-3 cursor-pointer rounded-xl border border-transparent transition-all relative group hover:shadow-sm",
+                        selectedId === thread.id 
+                            ? "bg-white shadow-sm border-slate-100" 
+                            : "bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-800 border-slate-50 dark:border-slate-800"
+                    )}
+                >
+                    <div className="flex items-start gap-3">
+                        <div className={cn(
+                            "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0 overflow-hidden",
+                            selectedId === thread.id ? "bg-purple-100 text-purple-600" : "bg-orange-100 text-orange-600"
+                        )}>
+                            {thread.user.avatar.startsWith('http') ? (
+                                <img src={thread.user.avatar} alt={thread.user.name} className="w-full h-full object-cover" />
+                            ) : (
+                                thread.user.name.charAt(0)
+                            )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-baseline mb-0.5">
+                                <h3 className="font-bold text-xs text-slate-900 dark:text-slate-200 truncate">
+                                    {thread.user.name}
+                                </h3>
+                                <span className="text-[10px] text-slate-400 font-medium">{thread.timestamp}</span>
+                            </div>
+                            <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate leading-tight">
+                                {thread.lastMessage}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            ))
+        )}
       </div>
     </div>
   );

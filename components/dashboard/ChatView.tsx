@@ -1,24 +1,34 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Thread, Message } from '@/lib/data';
 import { fetchThreadMessages } from '@/lib/api';
 import { Send, Image, Smile, Mic, Video, MoreVertical, Sparkles, Plus, Search, ArrowLeft, CornerUpLeft, FileText, CheckCheck, Clock, Save, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
 import { messageSchema } from '@/lib/schemas';
 import { z } from 'zod';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ChatViewProps {
   thread?: Thread;
   onBack?: () => void;
+  isLoading?: boolean;
 }
 
-export const ChatView = ({ thread, onBack }: ChatViewProps) => {
+export const ChatView = ({ thread, onBack, isLoading }: ChatViewProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
 
   // Reset messages or load specific messages when thread changes
   useEffect(() => {
@@ -30,9 +40,9 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
     }
   }, [thread]);
 
-  if (!thread) {
+  if (!thread && !isLoading) {
     return (
-        <div className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-slate-950 text-slate-400 font-sans">
+        <div className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-slate-950 text-slate-400 font-sans rounded-[8.42px]">
             <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
                 <Sparkles className="w-8 h-8 text-slate-400" />
             </div>
@@ -66,7 +76,7 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-white dark:bg-slate-950 relative font-sans h-full overflow-hidden">
+    <div className="flex-1 flex flex-col bg-white dark:bg-slate-950 relative font-sans h-full overflow-hidden rounded-[8.42px] border border-slate-100 dark:border-slate-800">
       {/* Header */}
       <div className="flex-shrink-0 flex items-center justify-between px-6 py-4 bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-3">
@@ -77,21 +87,28 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
             )}
             
             {/* User Name */}
-            <div 
-                style={{
-                    width: '110.04px',
-                    height: '29.04px',
-                    borderRadius: '8.42px',
-                    padding: '7.02px',
-                    gap: '8.42px',
-                    display: 'flex',
-                    alignItems: 'center'
-                }}
-            >
-                <h3 className="font-bold text-sm text-slate-900 dark:text-white truncate">
-                    {thread.user.name}
-                </h3>
-            </div>
+            {isLoading ? (
+                <div className="flex items-center gap-3">
+                    <Skeleton className="w-[110px] h-[29px] rounded-lg" />
+                </div>
+            ) : (
+                <div 
+                    style={{
+                        width: 'auto',
+                        minWidth: '110.04px',
+                        height: '29.04px',
+                        borderRadius: '8.42px',
+                        padding: '7.02px',
+                        gap: '8.42px',
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}
+                >
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-white whitespace-nowrap">
+                        {thread?.user.name}
+                    </h3>
+                </div>
+            )}
         </div>
 
         {/* Icons Group */}
@@ -126,50 +143,63 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-6 py-4 space-y-[9.82px] no-scrollbar min-h-0">
-        {/* Date Pill - Dynamic */}
-        <div className="flex justify-center mb-6">
-            <div className="bg-slate-100 dark:bg-slate-800 px-4 py-1.5 rounded-[4px] text-[10px] font-semibold text-slate-500">
-                {messages.length > 0 ? 'Today' : 'No messages'}
-            </div>
-        </div>
-
-        <AnimatePresence initial={false}>
-            {messages.map((msg) => (
-                <motion.div
-                    key={msg.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={cn(
-                        "flex w-full group items-start gap-2",
-                        msg.senderId === 0 ? "flex-row-reverse" : "flex-row"
-                    )}
-                >
-                    {/* Timestamp Outside */}
-                    <span className={cn(
-                        "text-[10px] text-slate-400 mt-1 flex-shrink-0",
-                        msg.senderId === 0 ? "text-right" : "text-left"
-                    )}>
-                        {msg.timestamp}
-                    </span>
-
-                    <div className={cn(
-                        "max-w-[70%] p-3 rounded-2xl text-sm relative shadow-sm",
-                        msg.senderId === 0 
-                            ? "bg-[#EFE9FA] dark:bg-purple-900/20 text-slate-900 dark:text-slate-100 rounded-tr-none" 
-                            : "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-tl-none"
-                    )}>
-                        <p className="leading-relaxed text-[13px]">{msg.content}</p>
-                        
-                        {/* Double Tick for Outgoing (Inside bubble, bottom right) */}
-                        {msg.senderId === 0 && (
-                            <div className="absolute bottom-1 right-1">
-                                <CheckCheck className="w-3 h-3 text-blue-500" />
-                            </div>
-                        )}
+        {isLoading ? (
+             /* Skeleton Loading State for Messages */
+             <div className="space-y-6">
+                <div className="flex justify-center mb-6">
+                    <Skeleton className="h-6 w-24 rounded-full" />
+                </div>
+                {[1, 2, 3].map((i) => (
+                    <div key={i} className={`flex w-full gap-2 ${i % 2 === 0 ? 'flex-row-reverse' : 'flex-row'}`}>
+                         <Skeleton className={`h-16 w-[70%] rounded-2xl ${i % 2 === 0 ? 'rounded-tr-none' : 'rounded-tl-none'}`} />
                     </div>
-                </motion.div>
-            ))}
-        </AnimatePresence>
+                ))}
+             </div>
+        ) : (
+            <>
+                {/* Date Pill - Dynamic */}
+                <div className="flex justify-center mb-6">
+                    <div className="bg-slate-100 dark:bg-slate-800 px-4 py-1.5 rounded-[4px] text-[10px] font-semibold text-slate-500">
+                        {messages.length > 0 ? 'Today' : 'No messages'}
+                    </div>
+                </div>
+
+                {messages.map((msg) => (
+                    <div
+                        key={msg.id}
+                        className={cn(
+                            "flex w-full group items-start gap-2",
+                            msg.senderId === 0 ? "flex-row-reverse" : "flex-row"
+                        )}
+                    >
+                        {/* Timestamp Outside */}
+                        <span className={cn(
+                            "text-[10px] text-slate-400 mt-1 flex-shrink-0",
+                            msg.senderId === 0 ? "text-right" : "text-left"
+                        )}>
+                            {msg.timestamp}
+                        </span>
+
+                        <div className={cn(
+                            "max-w-[70%] p-3 rounded-2xl text-sm relative shadow-sm",
+                            msg.senderId === 0 
+                                ? "bg-[#EFE9FA] dark:bg-purple-900/20 text-slate-900 dark:text-slate-100 rounded-tr-none" 
+                                : "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-tl-none"
+                        )}>
+                            <p className="leading-relaxed text-[13px]">{msg.content}</p>
+                            
+                            {/* Double Tick for Outgoing (Inside bubble, bottom right) */}
+                            {msg.senderId === 0 && (
+                                <div className="absolute bottom-1 right-1">
+                                    <CheckCheck className="w-3 h-3 text-blue-500" />
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ))}
+                <div ref={messagesEndRef} />
+            </>
+        )}
       </div>
 
       {/* Input Area (Fixed Bottom) */}

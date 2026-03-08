@@ -3,23 +3,75 @@
 
 import { User, Mail, Phone, Clock, PlusCircle, ChevronDown, Instagram } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
 import { Thread } from '@/lib/data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface RightPanelProps {
   thread?: Thread;
+  isLoading?: boolean;
 }
 
-export const RightPanel = ({ thread }: RightPanelProps) => {
+export const RightPanel = ({ thread, isLoading }: RightPanelProps) => {
+  if (isLoading) {
+    return (
+        <div 
+            className="flex flex-col bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 overflow-y-auto no-scrollbar font-sans h-full"
+            style={{
+                width: '294.03px',
+                borderRadius: '8.42px',
+                gap: '7.02px',
+            }}
+        >
+             {/* Header Skeleton */}
+             <div className="flex items-center justify-between px-4 pt-4 mb-2">
+                 <Skeleton className="h-6 w-20" />
+                 <Skeleton className="h-4 w-4 rounded-md" />
+             </div>
+
+             {/* Chat Data Skeleton */}
+             <div className="px-4 py-4 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex justify-between mb-4">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-4" />
+                </div>
+                <div className="space-y-3">
+                    <div className="flex justify-between">
+                        <Skeleton className="h-3 w-16" />
+                        <Skeleton className="h-3 w-24" />
+                    </div>
+                    <div className="flex justify-between">
+                        <Skeleton className="h-3 w-16" />
+                        <Skeleton className="h-3 w-24" />
+                    </div>
+                </div>
+             </div>
+
+             {/* Contact Data Skeleton */}
+             <div className="px-4 py-4 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex justify-between mb-4">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-4" />
+                </div>
+                <div className="space-y-3">
+                    {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="flex justify-between">
+                            <Skeleton className="h-3 w-20" />
+                            <Skeleton className="h-3 w-32" />
+                        </div>
+                    ))}
+                </div>
+             </div>
+        </div>
+    );
+  }
+
   if (!thread) {
     return (
         <div 
-            className="flex flex-col items-center justify-center text-slate-400 bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800"
+            className="flex flex-col items-center justify-center text-slate-400 bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 h-full"
             style={{
-                width: '294.03509521484375px',
-                height: '609.8245849609375px',
+                width: '294.03px',
                 borderRadius: '8.42px',
-                opacity: 1,
             }}
         >
             <User className="w-12 h-12 mb-4 opacity-20" />
@@ -34,17 +86,15 @@ export const RightPanel = ({ thread }: RightPanelProps) => {
 
   return (
     <div 
-        className="flex flex-col bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 overflow-y-auto no-scrollbar font-sans"
+        className="flex flex-col bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 overflow-y-auto no-scrollbar font-sans h-full"
         style={{
-            width: '294.03509521484375px',
-            height: '609.8245849609375px',
+            width: '294.03px',
             borderRadius: '8.42px',
             gap: '7.02px',
-            opacity: 1,
         }}
     >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 pt-4 mb-2">
+        <div className="flex items-center justify-between px-4 pt-4 mb-2 flex-shrink-0">
              <h3 className="font-bold text-base text-slate-900 dark:text-white">Details</h3>
              <div className="w-4 h-4 text-slate-400 cursor-pointer">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -56,7 +106,7 @@ export const RightPanel = ({ thread }: RightPanelProps) => {
 
         {/* Chat Data Section */}
         <div 
-            className="px-4 flex flex-col justify-center"
+            className="px-4 flex flex-col justify-center flex-shrink-0"
             style={{
                 width: '294.03509521484375px',
                 height: '101.0526351928711px',
@@ -94,7 +144,7 @@ export const RightPanel = ({ thread }: RightPanelProps) => {
 
         {/* Contact Data Section */}
         <div 
-            className="px-4 flex flex-col justify-center"
+            className="px-4 flex flex-col justify-center flex-shrink-0"
             style={{
                 width: '294.03509521484375px',
                 height: '189.4736785888672px',
@@ -133,7 +183,7 @@ export const RightPanel = ({ thread }: RightPanelProps) => {
 
         {/* Contact Labels Section */}
          <div 
-            className="px-4 flex flex-col justify-center"
+            className="px-4 flex flex-col justify-center flex-shrink-0"
             style={{
                 width: '294.03509521484375px',
                 height: '65.96491241455078px',
@@ -168,7 +218,7 @@ export const RightPanel = ({ thread }: RightPanelProps) => {
 
         {/* Notes Section */}
         <div 
-            className="px-4 flex flex-col justify-center"
+            className="px-4 flex flex-col justify-center flex-shrink-0"
             style={{
                 width: '294.03509521484375px',
                 height: '101.0526351928711px',
@@ -200,7 +250,7 @@ export const RightPanel = ({ thread }: RightPanelProps) => {
 
         {/* Other Chats Section */}
         <div 
-             className="px-4 flex flex-col justify-center"
+             className="px-4 flex flex-col justify-center flex-shrink-0"
              style={{
                 width: '294.03509521484375px',
                 height: '82.94737243652344px',

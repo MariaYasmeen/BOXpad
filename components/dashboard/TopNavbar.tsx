@@ -76,6 +76,7 @@ export const TopNavbar = ({ activeTab = 'inbox', onTabChange }: TopNavbarProps) 
                     isActive={item.id === activeTab}
                     onClick={() => onTabChange?.(item.id)}
                     variant="navbar"
+                    layoutId={`honeycomb-${item.id}`}
                 />
              ))}
           </div>
