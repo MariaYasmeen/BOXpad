@@ -1,31 +1,42 @@
 
 'use client';
 
-import { User, Mail, Phone, Clock, PlusCircle, ChevronDown, Instagram } from 'lucide-react';
+import { User, Mail, Phone, Clock, PlusCircle, ChevronDown, Instagram, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Thread } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
+import { motion } from 'framer-motion';
 
 interface RightPanelProps {
   thread?: Thread;
   isLoading?: boolean;
+  onClose?: () => void;
+  isOverlay?: boolean;
+  isPhone?: boolean;
 }
 
-export const RightPanel = ({ thread, isLoading = false }: RightPanelProps) => {
+export const RightPanel = ({ thread, isLoading = false, onClose, isOverlay = false, isPhone = false }: RightPanelProps) => {
+  const containerStyle = {
+    width: isOverlay ? '100%' : '294.03509521484375px',
+    maxWidth: isOverlay ? (isPhone ? '100%' : '320px') : '294.03509521484375px',
+    height: isOverlay ? '100%' : 'calc(100% - 20px)',
+    borderRadius: isOverlay ? '0px' : '8.42px',
+    marginTop: isOverlay ? '0px' : '10px',
+    marginBottom: isOverlay ? '0px' : '10px',
+    marginLeft: isOverlay ? '0px' : '10px',
+    gap: '7.02px',
+    opacity: 1,
+    boxShadow: isOverlay ? '-4px 0 15px rgba(0,0,0,0.1)' : 'none',
+  };
+
   if (isLoading) {
     return (
         <div 
-            className="flex flex-col bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 overflow-hidden font-sans"
-            style={{
-                width: '294.03509521484375px',
-                height: 'calc(100% - 20px)',
-                borderRadius: '8.42px',
-                marginTop: '10px', // Added margin as requested
-                marginBottom: '10px',
-                marginLeft: '10px',
-                gap: '7.02px',
-                opacity: 1,
-            }}
+            className={cn(
+                "flex flex-col bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 overflow-hidden font-sans",
+                isOverlay && "h-full"
+            )}
+            style={containerStyle}
         >
             <div className="p-4 space-y-6">
                 <Skeleton className="h-6 w-1/3" />
@@ -43,17 +54,17 @@ export const RightPanel = ({ thread, isLoading = false }: RightPanelProps) => {
   if (!thread) {
     return (
         <div 
-            className="flex flex-col items-center justify-center text-slate-400 bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800"
-            style={{
-                width: '294.03509521484375px',
-                height: 'calc(100% - 20px)',
-                borderRadius: '8.42px',
-                marginTop: '10px', // Added margin as requested
-                marginBottom: '10px',
-                marginLeft: '10px',
-                opacity: 1,
-            }}
+            className={cn(
+                "flex flex-col items-center justify-center text-slate-400 bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800",
+                isOverlay && "h-full"
+            )}
+            style={containerStyle}
         >
+            <div className="absolute top-4 right-4">
+                <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full">
+                    <X className="w-5 h-5 text-slate-500" />
+                </button>
+            </div>
             <User className="w-12 h-12 mb-4 opacity-20" />
             <p className="text-sm text-center">Select a conversation</p>
         </div>
@@ -65,35 +76,40 @@ export const RightPanel = ({ thread, isLoading = false }: RightPanelProps) => {
   const lastName = names.slice(1).join(' ');
 
   return (
-        <div 
-            className="flex flex-col bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 overflow-y-auto no-scrollbar font-sans"
-            style={{
-                width: '294.03509521484375px',
-                height: 'calc(100% - 20px)',
-                borderRadius: '8.42px',
-                marginTop: '10px', // Added margin as requested
-                marginBottom: '10px',
-                marginLeft: '10px',
-                gap: '7.02px',
-                opacity: 1,
-            }}
+        <motion.div 
+            initial={isOverlay ? { x: '100%' } : { opacity: 0 }}
+            animate={isOverlay ? { x: 0 } : { opacity: 1 }}
+            exit={isOverlay ? { x: '100%' } : { opacity: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className={cn(
+                "flex flex-col bg-white dark:bg-slate-950 border-l border-slate-200 dark:border-slate-800 overflow-y-auto no-scrollbar font-sans relative",
+                isOverlay && "h-full"
+            )}
+            style={containerStyle}
         >
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-4 mb-2">
              <h3 className="font-bold text-base text-slate-900 dark:text-white">Details</h3>
-             <div className="w-4 h-4 text-slate-400 cursor-pointer">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="9" y1="3" x2="9" y2="21"></line>
-                </svg>
-             </div>
+             <button 
+                onClick={onClose}
+                className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+             >
+                {isOverlay ? (
+                    <X className="w-5 h-5" />
+                ) : (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="9" y1="3" x2="9" y2="21"></line>
+                    </svg>
+                )}
+             </button>
         </div>
 
         {/* Chat Data Section */}
         <div 
             className="px-4 flex flex-col justify-center"
             style={{
-                width: '294.03509521484375px',
+                width: isOverlay ? '100%' : '294.03509521484375px',
                 height: '101.0526351928711px',
                 paddingBottom: '5.61px',
                 borderBottomWidth: '0.7px',
@@ -131,7 +147,7 @@ export const RightPanel = ({ thread, isLoading = false }: RightPanelProps) => {
         <div 
             className="px-4 flex flex-col justify-center"
             style={{
-                width: '294.03509521484375px',
+                width: isOverlay ? '100%' : '294.03509521484375px',
                 height: '189.4736785888672px',
                 paddingBottom: '5.61px',
                 borderBottomWidth: '0.7px',
@@ -170,7 +186,7 @@ export const RightPanel = ({ thread, isLoading = false }: RightPanelProps) => {
          <div 
             className="px-4 flex flex-col justify-center"
             style={{
-                width: '294.03509521484375px',
+                width: isOverlay ? '100%' : '294.03509521484375px',
                 height: '65.96491241455078px',
                 paddingBottom: '5.61px',
                 borderBottomWidth: '0.7px',
@@ -205,7 +221,7 @@ export const RightPanel = ({ thread, isLoading = false }: RightPanelProps) => {
         <div 
             className="px-4 flex flex-col justify-center"
             style={{
-                width: '294.03509521484375px',
+                width: isOverlay ? '100%' : '294.03509521484375px',
                 height: '101.0526351928711px',
                 paddingBottom: '5.61px',
                 borderBottomWidth: '0.7px',
@@ -237,7 +253,7 @@ export const RightPanel = ({ thread, isLoading = false }: RightPanelProps) => {
         <div 
              className="px-4 flex flex-col justify-center"
              style={{
-                width: '294.03509521484375px',
+                width: isOverlay ? '100%' : '294.03509521484375px',
                 height: '82.94737243652344px',
                 paddingBottom: '5.61px',
                 borderBottomWidth: '0.7px',
@@ -262,6 +278,6 @@ export const RightPanel = ({ thread, isLoading = false }: RightPanelProps) => {
              </div>
         </div>
 
-    </div>
+        </motion.div>
   );
 };

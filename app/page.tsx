@@ -8,7 +8,7 @@ import { TopNavbar } from '@/components/dashboard/TopNavbar';
 import { ChatList } from '@/components/dashboard/ChatList';
 import { ChatView } from '@/components/dashboard/ChatView';
 import { RightPanel } from '@/components/dashboard/RightPanel';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Thread } from '@/lib/data';
 import { fetchInboxData, fetchUnreadCount } from '@/lib/api';
 import { Menu } from 'lucide-react';
@@ -23,7 +23,16 @@ export default function Home() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [selectedThread, setSelectedThread] = useState<Thread | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
   const isMobile = useMediaQuery('(max-width: 1024px)');
+  const isPhone = useMediaQuery('(max-width: 768px)');
+  const isOverlayMode = useMediaQuery('(max-width: 1279px)');
+  const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1024px)');
+
+  useEffect(() => {
+    // Automatically close right panel on mobile/tablet initially, open on desktop
+    setIsRightPanelOpen(!isMobile);
+  }, [isMobile]);
 
   useEffect(() => {
     async function loadData() {
@@ -162,7 +171,7 @@ export default function Home() {
                      <button onClick={() => setIsMobileOpen(true)} className="p-2 -ml-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
                         <Menu className="w-6 h-6" />
                      </button>
-                     <div className="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">BOXpad</div>
+                   
                    </div>
                    <div className="w-8 h-8 bg-slate-200 dark:bg-slate-800 rounded-full" />
                 </div>
@@ -191,15 +200,41 @@ export default function Home() {
                         <ChatView 
                             thread={selectedThread} 
                             onBack={() => setSelectedThread(undefined)}
+                            onToggleRightPanel={() => setIsRightPanelOpen(!isRightPanelOpen)}
+                            isRightPanelOpen={isRightPanelOpen}
                         />
                     </div>
                     
-                    {/* Right Panel - Desktop only */}
-                    {!isMobile && (
+                    {/* Right Panel - Desktop (Collapsible) */}
+                    {!isOverlayMode && isRightPanelOpen && (
                         <div className="hidden xl:flex flex-shrink-0 h-full pr-4">
-                            <RightPanel thread={selectedThread} isLoading={isLoading} />
+                            <RightPanel 
+                                thread={selectedThread} 
+                                isLoading={isLoading} 
+                                onClose={() => setIsRightPanelOpen(false)}
+                            />
                         </div>
                     )}
+
+                    {/* Right Panel - Overlay (Mobile/Tablet/Small Laptop) */}
+                    <AnimatePresence>
+                        {isOverlayMode && isRightPanelOpen && (
+                            <motion.div 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 z-50 flex justify-end bg-black/20 backdrop-blur-sm"
+                            >
+                                <RightPanel 
+                                    thread={selectedThread} 
+                                    isLoading={isLoading} 
+                                    onClose={() => setIsRightPanelOpen(false)}
+                                    isOverlay={true}
+                                    isPhone={isPhone}
+                                />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
          </div>

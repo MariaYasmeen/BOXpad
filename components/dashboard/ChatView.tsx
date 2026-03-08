@@ -13,9 +13,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 interface ChatViewProps {
   thread?: Thread;
   onBack?: () => void;
+  onToggleRightPanel?: () => void;
+  isRightPanelOpen?: boolean;
 }
 
-export const ChatView = ({ thread, onBack }: ChatViewProps) => {
+export const ChatView = ({ thread, onBack, onToggleRightPanel, isRightPanelOpen }: ChatViewProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -93,6 +95,8 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
             
             {/* User Name */}
             <div 
+                onClick={onToggleRightPanel}
+                className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                 style={{
                     height: '29.04px',
                     borderRadius: '8.42px',
@@ -118,6 +122,27 @@ export const ChatView = ({ thread, onBack }: ChatViewProps) => {
                 alignItems: 'center'
             }}
         >
+            <button 
+                onClick={onToggleRightPanel}
+                style={{
+                    width: '22.46px',
+                    height: '22.46px',
+                    borderRadius: '5.61px',
+                    padding: '4.21px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: isRightPanelOpen ? '#000000' : '#EBEBEB',
+                    color: isRightPanelOpen ? '#ffffff' : '#000000'
+                }}
+                className="transition-opacity hover:opacity-80 lg:flex items-center justify-center"
+                title="Toggle Right Panel"
+            >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="15" y1="3" x2="15" y2="21"></line>
+                </svg>
+            </button>
             {[MoreVertical, History, Save].map((Icon, i) => {
                 const isLast = i === 2;
                 return (
